@@ -1,25 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+import Home from './components/Home/Home'
+import SignIn from './components/SignIn/SignIn';
+import { AuthProvider } from './components/Auth/Auth'
+import PrivateRoute from './components/PrivateRoute/PrivateRoute'
+
+
+//loads App
+//if logged in -> redirect to Home with Sign Out button
+//else -> redirect to Sign In for login
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthProvider>
+      <Router>
+        <div>
+          <PrivateRoute exact path="/" component={Home} />
+          <Route exact path="/signin" component={SignIn} />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 
