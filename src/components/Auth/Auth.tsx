@@ -1,25 +1,38 @@
-import React from 'react'
-import { useEffect, useState } from 'react'
-import fb from '../../firebaseConfig'
+import { createContext, useEffect, useState } from 'react'
+import fb from '../../firebaseConfig';
+import firebase from 'firebase';
 
-export const AuthContext = React.createContext()
+(window as any).fb = fb;
 
-export const AuthProvider = ({ children }) => {
-    const [currentUser, setCurrentUser] = useState(null)
+type ContextUser = firebase.User | null | undefined;
 
+interface IAuthContext {
+  currentUser: ContextUser;
+}
 
-    useEffect(() => {
-        fb.auth().onAuthStateChanged(setCurrentUser)
-    }, [])
+const defaultAuthContext = {
+  currentUser: null,
+} as const;
 
+export const AuthContext = createContext<IAuthContext>(defaultAuthContext);
 
-    return (
-        <AuthContext.Provider
-            value={{
-                currentUser
-            }}
-        >
-            {children}
-        </AuthContext.Provider>
-    )
+export const AuthProvider = ({children}) => {
+  const [currentAuthContext, setCurrentAuthContext] = useState<IAuthContext>(defaultAuthContext)
+
+  useEffect(() => {
+    fb.auth().onAuthStateChanged((user: firebase.User | null) => {
+      setCurrentAuthContext({...currentAuthContext, currentUser: user});
+    });
+  }, [])
+
+  console.log(currentAuthContext.currentUser)
+  if (!currentAuthContext.currentUser) {
+    return null;
+  }
+
+  return (
+    <AuthContext.Provider value={currentAuthContext}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
