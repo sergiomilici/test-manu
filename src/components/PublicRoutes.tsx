@@ -6,7 +6,7 @@ export const PublicRoutes = () => {
   return (
     <>
       <Route exact path="/signin" component={UserAccess} />
-      <Route path="/" render={() => <Redirect to="/signin" />} />
+      <Route exact path="/" render={() => <Redirect to="/signin" />} />
     </>
   )
 }

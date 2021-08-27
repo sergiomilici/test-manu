@@ -1,6 +1,8 @@
 import fb from "./firebaseConfig";
 
-export const getAuthHeader = async () => {
+const API_URL = `https://us-central1-toptal-project-5f041.cloudfunctions.net/api`
+
+export const getAuthHeader = async () :Promise<string>=> {
 
   const currentUser = fb.auth().currentUser
 
@@ -8,12 +10,12 @@ export const getAuthHeader = async () => {
     throw new Error("No current user")
   }
 
-  currentUser.getIdToken().then(function(idToken) {
+  return currentUser.getIdToken().then(function(idToken) {
     return idToken
   }).catch(function(error) {
-    console.log(error)
+    console.error(error)
+      throw error
   });
-
 }
 
 export const signIn = (email: string, password: string) => {
@@ -24,7 +26,7 @@ export const registerUser = (email:string, password:string, displayName: string)
 
   const data = {email, password, displayName}
 
- return fetch('https://us-central1-toptal-project-5f041.cloudfunctions.net/api/users', {
+ return fetch(`${API_URL}/users`, {
   method:'POST', 
   mode:'cors',
   headers: {
@@ -37,6 +39,24 @@ export const registerUser = (email:string, password:string, displayName: string)
 export const fetchUsers = async () => {
   
   const bearerToken = await getAuthHeader()
+  console.log("token", bearerToken)
+  const reqOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    method: 'GET',
+  }
+  console.log("options", reqOptions)
+
+  const response = await fetch(`${API_URL}/users`, reqOptions)
+
+  return await response.json()
+
+}
+
+export const fetchRestaurants = async () => {
+  const bearerToken = await getAuthHeader()
 
   const reqOptions = {
     headers: {
@@ -46,8 +66,7 @@ export const fetchUsers = async () => {
     method: 'GET',
   }
 
-  const response = await fetch("https://us-central1-toptal-project-5f041.cloudfunctions.net/api/users", reqOptions)
+  const response = await fetch(`${API_URL}/restaurants`, reqOptions)
 
   return await response.json()
-
 }

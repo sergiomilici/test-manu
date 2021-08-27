@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { useHistory } from "react-router-dom";
 import { AuthContext } from '../Auth/Auth'
-import { fetchUsers } from '../../Api';
+import { fetchUsers, fetchRestaurants } from '../../Api';
 import fb from '../../firebaseConfig'
 
 const HelloWorld = () => {
@@ -29,9 +29,8 @@ const HelloWorld = () => {
 
   return (
     <div>
-      <h1>Hello World</h1>
+      <h1>Users/Restaurants</h1>
       <h2>display name: {currentUser?.displayName}</h2>
-      <h3>role: {currentUser?.role}</h3>
       <button onClick={getUsers}>get users</button>
       <button
         onClick={logOut}
