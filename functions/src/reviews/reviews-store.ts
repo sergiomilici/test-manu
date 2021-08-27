@@ -156,6 +156,7 @@ const mapSnapshotToReview = (reviewSnapshots: FirebaseFirestore.QuerySnapshot<Fi
     if (reviewDoc.exists) {
       reviews.push({
         ...(reviewDoc.data() as Review),
+        id: reviewDoc.id,
       });
     }
   });

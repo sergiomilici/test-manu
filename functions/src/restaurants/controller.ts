@@ -3,7 +3,7 @@ import { CreateRestaurantPayload } from "./create-restaurant-payload";
 import {
   createRestaurantDoc,
   getAllRestaurants,
-  getOwnerRestaurants,
+  getOwnerRestaurants, getRestaurantById,
   getRestaurantDoc,
   removeRestaurant,
   updateRestaurantData,
@@ -94,3 +94,12 @@ export const deleteRestaurant = async (req: Request, res: Response): Promise<voi
     handleError(res, err);
   }
 };
+
+export const getRestaurantWithId = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {restaurantId} = req.params;
+    res.send(await getRestaurantById(restaurantId));
+  } catch (err) {
+    handleError(res, err);
+  }
+}

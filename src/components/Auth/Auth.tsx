@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, useRef } from 'react'
+import { createContext, useEffect, useRef, useState } from 'react'
 import fb from '../../firebaseConfig';
 import firebase from 'firebase';
 import { getToken } from './Session';
@@ -12,7 +12,6 @@ interface IAuthContext {
   validSession: boolean,
 }
 
-
 const defaultAuthContext = {
   currentUser: null,
   validSession: !!getToken(),
@@ -20,23 +19,29 @@ const defaultAuthContext = {
 
 export const AuthContext = createContext<IAuthContext>(defaultAuthContext);
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({children}) => {
   const [currentAuthContext, setCurrentAuthContext] = useState<IAuthContext>(defaultAuthContext)
   const fbStateListener = useRef<firebase.Unsubscribe | null>(null)
 
   useEffect(() => {
     const sessionToken = getToken()
     if (sessionToken && !currentAuthContext.validSession) {
-      setCurrentAuthContext({ ...currentAuthContext, validSession: true });
+      setCurrentAuthContext({...currentAuthContext, validSession: true});
     }
 
-    if (fbStateListener.current) { return }
+    if (fbStateListener.current) {
+      return
+    }
 
     fbStateListener.current = fb.auth().onAuthStateChanged((user: firebase.User | null) => {
       if (user) {
-        setCurrentAuthContext({ ...currentAuthContext, currentUser: user, validSession: true });
+        setCurrentAuthContext({
+          ...currentAuthContext,
+          currentUser: user,
+          validSession: true,
+        });
       } else {
-        setCurrentAuthContext({ ...currentAuthContext, currentUser: user });
+        setCurrentAuthContext({...currentAuthContext, currentUser: user});
       }
     });
   }, [fbStateListener, currentAuthContext])
