@@ -1,13 +1,15 @@
 import { Route } from 'react-router-dom'
 import { AuthProvider } from './Auth/Auth';
-import HelloWorld from './HelloWorld/HelloWorld';
+import Restaurants from './Restaurants/Restaurants';
+import RestaurantView from './RestaurantView/RestaurantView';
 
 export const PrivateRoutes = () => {
 
   return (
     <AuthProvider>
-      <Route exact path="/helloworld" component={HelloWorld} />
-      <Route exact path="/" component={HelloWorld} />
+      <Route exact path="/restaurants" component={Restaurants} />
+      <Route exact path="/restaurant/:id" component={RestaurantView} />
+      <Route exact path="/" component={Restaurants} />
     </AuthProvider>
   )
 }

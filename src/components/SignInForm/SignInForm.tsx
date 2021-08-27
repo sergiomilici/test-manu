@@ -3,6 +3,7 @@ import { withRouter } from "react-router"
 import { useHistory } from 'react-router-dom'
 import { Button, Form, Input } from 'antd';
 import { getAuthHeader, signIn } from "../../Api";
+import { setToken } from "../Auth/Session";
 
 const SignIn = () => {
 
@@ -13,8 +14,8 @@ const SignIn = () => {
       try {
         await signIn(email, password)
         const sessionToken = await getAuthHeader()
-        localStorage.setItem('sessionToken', sessionToken)
-        history.push("/helloworld")
+        setToken(sessionToken)
+        history.push("/restaurants")
       } catch (error) {
         alert(error);
       }

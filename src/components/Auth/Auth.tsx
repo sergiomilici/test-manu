@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState, useRef } from 'react'
 import fb from '../../firebaseConfig';
 import firebase from 'firebase';
+import { getToken } from './Session';
 
 (window as any).fb = fb;
 
@@ -11,9 +12,10 @@ interface IAuthContext {
   validSession: boolean,
 }
 
+
 const defaultAuthContext = {
   currentUser: null,
-  validSession: !!localStorage.getItem('sessionToken'),
+  validSession: !!getToken(),
 } as const;
 
 export const AuthContext = createContext<IAuthContext>(defaultAuthContext);
@@ -23,9 +25,7 @@ export const AuthProvider = ({ children }) => {
   const fbStateListener = useRef<firebase.Unsubscribe | null>(null)
 
   useEffect(() => {
-    const sessionToken = localStorage.getItem('sessionToken')
-    console.log("sessiontoken", sessionToken)
-    console.log("context", currentAuthContext)
+    const sessionToken = getToken()
     if (sessionToken && !currentAuthContext.validSession) {
       setCurrentAuthContext({ ...currentAuthContext, validSession: true });
     }
@@ -41,8 +41,6 @@ export const AuthProvider = ({ children }) => {
     });
   }, [fbStateListener, currentAuthContext])
 
-
-  console.log(currentAuthContext.validSession)
   if (!currentAuthContext.validSession) {
     return null;
   }
