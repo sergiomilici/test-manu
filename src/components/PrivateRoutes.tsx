@@ -13,3 +13,4 @@ export const PrivateRoutes = () => {
     </AuthProvider>
   )
 }
+

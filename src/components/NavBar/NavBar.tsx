@@ -1,8 +1,8 @@
 import { useContext } from 'react'
 import { useHistory } from "react-router-dom";
-import fb from "../../../firebaseConfig";
+import fb from "../../firebaseConfig";
 import { Button } from 'antd';
-import { AuthContext } from "../../Auth/Auth";
+import { AuthContext } from "../Auth/Auth";
 import { PoweroffOutlined } from "@ant-design/icons";
 
 

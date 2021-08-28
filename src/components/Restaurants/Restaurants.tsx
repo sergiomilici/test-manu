@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { List, Spin } from 'antd';
 import { fetchRestaurants } from '../../Api';
 import { HomeOutlined } from "@ant-design/icons";
-import NavBar from './NavBar/NavBar';
+import NavBar from "../NavBar/NavBar";
 
 const Restaurants = () => {
   const [restaurants, setRestaurants] = useState<any | []>()
@@ -26,12 +26,7 @@ const Restaurants = () => {
     getRestaurants()
   }, [])
 
-
-  if (!restaurants) {
-    return null
-  }
-
-  const restaurantsList = restaurants.restaurants || []
+  const restaurantsList = restaurants?.restaurants || []
 
   return (
     <>
@@ -39,15 +34,13 @@ const Restaurants = () => {
       <div style={{
         width: '500px',
         margin: 'auto',
+        textAlign: 'center',
       }}
       >
 
-        <h1>Users/Restaurants</h1>
+        {isLoading && <Spin style={{ margin: 'auto' }} size="large" />}
 
-
-        {isLoading && <Spin size="large" />}
-
-        {restaurantsList && <List
+        {!isLoading && restaurantsList && <List
           itemLayout="horizontal"
           header={<div>All restaurants</div>}
           bordered

@@ -84,7 +84,23 @@ export const fetchRestaurantById = async (id) => {
     method: 'GET',
   }
 
-  const response = await fetch(`${API_URL}/restaurants`, reqOptions)
+  const response = await fetch(`${API_URL}/restaurants/${id}`, reqOptions)
+
+  return await response.json()
+}
+
+export const fetchReviewsByRestaurantId = async (id) => {
+  const bearerToken = await getAuthHeader()
+
+  const reqOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    method: 'GET',
+  }
+
+  const response = await fetch(`${API_URL}/reviews/${id}`, reqOptions)
 
   return await response.json()
 }

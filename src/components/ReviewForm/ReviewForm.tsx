@@ -1,32 +1,30 @@
 import { useState } from "react";
 import { Form, DatePicker, Rate, Input, Button } from "antd";
+import moment from 'moment';
 
 const { TextArea } = Input;
 
-const printSubmit = (values) => {
-    console.log(values);
-};
+type Star = 1 | 2 | 3 | 4 | 5
 
 const ReviewForm = () => {
-    const [userReview, setUserReview] = useState({
-        rating: 0,
-        date: null,
-        message: "",
-    });
+    const [stars, setStars] = useState<Star | undefined>()
+    const [dateOfVisit, setDateOfVisit] = useState<moment.Moment | null>()
+    const [comment, setComment] = useState<string>("")
 
-    //   const userReview = {
-    //       rating: number,
-    //       date: date,
-    //       message: string,
-    //   }
+    const printSubmit = () => {
+        let userReview = {
+            stars: stars,
+            date_of_visit: moment(dateOfVisit).unix(),
+            comment: comment,
+        }
 
-    //dates timestamp seconds
+        console.log(userReview)
+    };
 
     return (
         <>
-
             <Form
-                style={{ width: 500, margin: 'auto', }}
+                style={{ width: 500, margin: 'auto', marginBottom: '30px', }}
                 onFinish={printSubmit}
             >         <h2>Leave you review</h2>
                 <Form.Item
@@ -39,7 +37,7 @@ const ReviewForm = () => {
                         },
                     ]}
                 >
-                    <Rate onChange={(value) => console.log(value)} />
+                    <Rate onChange={(value) => setStars(value as Star)} />
                 </Form.Item>
                 <Form.Item
                     name="date"
@@ -54,7 +52,7 @@ const ReviewForm = () => {
                     <DatePicker
                         placeholder="Select date"
                         format={"MM-DD-YYYY"}
-                        onChange={(date, dateString) => console.log(date, dateString)}
+                        onChange={(date) => setDateOfVisit(date)}
                     />
                 </Form.Item>
                 <Form.Item
@@ -71,6 +69,7 @@ const ReviewForm = () => {
                         maxLength={250}
                         autoSize={{ minRows: 4, maxRows: 4 }}
                         placeholder="Write your review"
+                        onChange={(e) => setComment(e.target.value)}
                     />
                 </Form.Item>
                 <Button type="primary" htmlType="submit">
