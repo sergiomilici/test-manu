@@ -126,3 +126,11 @@ export const removeRestaurant = async (restaurantId: string) => {
   const restaurantRef = getRestaurantRef(restaurantId);
   await restaurantRef.delete();
 };
+
+export const getRestaurantById = async (restaurantId: string): Promise<Restaurant> => {
+  const restaurantDoc = await getRestaurantDoc(restaurantId);
+  return {
+    ...(restaurantDoc.data() as Restaurant),
+    id: restaurantId,
+  };
+}

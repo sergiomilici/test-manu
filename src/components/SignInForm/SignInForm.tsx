@@ -1,23 +1,27 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { withRouter } from "react-router"
 import { useHistory } from 'react-router-dom'
 import { Button, Form, Input } from 'antd';
-import { getAuthHeader, signIn } from "../../Api";
+import { getTokenFromFirebase, signIn } from "../../Api";
 import { setToken } from "../Auth/Session";
 
 const SignIn = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const history = useHistory()
 
   const handleSignIn = useCallback(
-    async ({ email, password }) => {
+    async ({email, password}) => {
       try {
+        setIsLoading(true)
         await signIn(email, password)
-        const sessionToken = await getAuthHeader()
+        const sessionToken = await getTokenFromFirebase()
         setToken(sessionToken)
         history.push("/restaurants")
       } catch (error) {
         alert(error);
+      } finally {
+        setIsLoading(false)
       }
     },
     [history]
@@ -80,8 +84,8 @@ const SignIn = () => {
             span: 16,
           }}
         >
-          <Button type="primary" htmlType="submit">
-            Log in
+          <Button type="primary" htmlType="submit" disabled={isLoading}>
+            {!isLoading ? 'Log in' : 'Logging in'}
           </Button>
         </Form.Item>
       </Form>
