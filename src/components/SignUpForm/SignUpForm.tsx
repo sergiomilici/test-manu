@@ -13,15 +13,11 @@ const SignUpForm = () => {
       notification.error({
         message: 'Error',
         description:
-        err.message
+          err.message
       });
     } finally {
       setIsLoading(false)
     }
-  };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
   };
 
   return (
@@ -41,7 +37,6 @@ const SignUpForm = () => {
           remember: true,
         }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
       >
         <Form.Item
           label="Display Name"

@@ -19,7 +19,6 @@ const ReviewsList = ({ restaurantId }) => {
     const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
-        console.log(restaurantId)
         const getReviewsById = async () => {
             try {
                 setIsLoading(true)
@@ -31,33 +30,17 @@ const ReviewsList = ({ restaurantId }) => {
                 setIsLoading(false)
             }
         }
-
         getReviewsById()
     }, [restaurantId])
 
-    console.log(reviews)
-    //Reviews are sorted desc
     return (
         <>
+            <h2>User's reviews</h2>
             {isLoading && <Spin style={{ margin: 'auto' }} size="large" />}
 
             {(reviews || []).map((review) => (
                 <ReviewCard review={review} key={review.id} />
             ))}
-
-            {/* {!isLoading && mockReviews.map((review, index) => (
-               
-            ))} */}
-
-            {/* {mockReviews &&
-                <>
-                    <h2>Reviews for this place</h2>
-                    {mockReviews.map((review, index) => (
-                        <ReviewCard review={review} key={index} />
-                    ))}
-                </>
-            } */}
-
         </>
     )
 }

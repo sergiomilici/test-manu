@@ -61,13 +61,16 @@ const RestaurantView = () => {
                 style={{
                     width: '500px',
                     margin: 'auto',
+                    paddingBottom: '20px',
                 }}
             >
                 {isLoading && <Spin style={{ margin: 'auto' }} size="large" />}
 
                 <RestaurantCard restaurant={restaurant} />
 
-                <ReviewForm />
+                <ReviewForm
+                    restaurantId={restaurantId}
+                    onReviewAdded={(restaurant) => { setRestaurant(restaurant) }} />
 
                 <ReviewsList restaurantId={restaurantId} />
 

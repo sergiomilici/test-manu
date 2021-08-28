@@ -1,26 +1,26 @@
 import { Card } from "antd"
 import { EnvironmentOutlined, DislikeOutlined, TrophyOutlined, LikeOutlined } from "@ant-design/icons";
 
-const RestaurantCard = (restaurant) => {
+const RestaurantCard = ({ restaurant }) => {
 
     return (
         <Card style={{ marginBottom: '15px', }}
-            title={restaurant.restaurant.name}
+            title={restaurant.name}
         >
-            <p><EnvironmentOutlined /> {restaurant.restaurant.city}</p>
+            <p><EnvironmentOutlined /> {restaurant.city}</p>
 
-            {restaurant.restaurant.avg_rating === 0 ? <p><TrophyOutlined /> This restaurant is not rated yet</p> : <p><TrophyOutlined /> Current Rating: {restaurant.restaurant.avg_rating}</p>}
+            {restaurant.avg_rating === 0 ? <p><TrophyOutlined /> This restaurant is not rated yet</p> : <p><TrophyOutlined /> Current Rating: {restaurant.avg_rating.toFixed(1)}</p>}
 
-            {restaurant.restaurant.highest_rated_review &&
+            {restaurant.highest_rated_review &&
                 <div
                     style={{ marginBottom: '10px', padding: '8px', backgroundColor: '#EDF7ED', color: '#1E4620' }}
                 >
                     <p>Highest review:</p>
-                    <p><LikeOutlined /> {restaurant.restaurant.highest_rated_review.comment}</p>
+                    <p><LikeOutlined /> {restaurant.highest_rated_review.comment}</p>
                 </div>
             }
 
-            {restaurant.restaurant.lowest_rated_review &&
+            {restaurant.lowest_rated_review &&
                 <div
                     style={{
                         padding: '8px',
@@ -29,7 +29,7 @@ const RestaurantCard = (restaurant) => {
                     }}
                 >
                     <p>Lowest review:</p>
-                    <p><DislikeOutlined /> {restaurant.restaurant.highest_rated_review.comment}</p>
+                    <p><DislikeOutlined /> {restaurant.lowest_rated_review.comment}</p>
                 </div>
             }
 

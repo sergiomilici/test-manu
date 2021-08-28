@@ -1,35 +1,48 @@
 import { useState } from "react";
-import { Form, DatePicker, Rate, Input, Button } from "antd";
+import { Form, DatePicker, Rate, Input, Button, notification } from "antd";
 import moment from 'moment';
+import { postReview, fetchRestaurantById } from "../../Api";
 
 const { TextArea } = Input;
 
 type Star = 1 | 2 | 3 | 4 | 5
 
-const ReviewForm = () => {
+const ReviewForm = ({ restaurantId, onReviewAdded }) => {
     const [stars, setStars] = useState<Star | undefined>()
     const [dateOfVisit, setDateOfVisit] = useState<moment.Moment | null>()
     const [comment, setComment] = useState<string>("")
+    const [isLoading, setIsLoading] = useState(false)
+    const [form] = Form.useForm()
 
-    const printSubmit = () => {
-        let userReview = {
-            stars: stars,
-            date_of_visit: moment(dateOfVisit).unix(),
-            comment: comment,
+    const handlePostReview = async () => {
+        try {
+            setIsLoading(true)
+            await postReview(restaurantId, stars!, moment(dateOfVisit).unix(), comment)
+            form.resetFields();
+            const restaurant = await fetchRestaurantById(restaurantId)
+            onReviewAdded(restaurant)
+        } catch (err) {
+            notification.error({
+                message: 'Error',
+                description:
+                    'There was an error while trying to submit your review. Please try again',
+            });
+        } finally {
+            setIsLoading(false)
         }
-
-        console.log(userReview)
     };
 
     return (
         <>
             <Form
+                form={form}
                 style={{ width: 500, margin: 'auto', marginBottom: '30px', }}
-                onFinish={printSubmit}
-            >         <h2>Leave you review</h2>
+                onFinish={handlePostReview}
+            >         <h2>Leave your review</h2>
                 <Form.Item
                     name="rate"
                     label="Rate"
+                    initialValue={0}
                     rules={[
                         {
                             required: true,
@@ -42,6 +55,7 @@ const ReviewForm = () => {
                 <Form.Item
                     name="date"
                     label="Date of visit"
+                    initialValue={""}
                     rules={[
                         {
                             required: true,
@@ -56,6 +70,7 @@ const ReviewForm = () => {
                     />
                 </Form.Item>
                 <Form.Item
+                    initialValue={""}
                     name="comment"
                     rules={[
                         {
@@ -72,8 +87,12 @@ const ReviewForm = () => {
                         onChange={(e) => setComment(e.target.value)}
                     />
                 </Form.Item>
-                <Button type="primary" htmlType="submit">
-                    Send review
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    disabled={isLoading}
+                >
+                    {!isLoading ? 'Send review' : 'Loading'}
                 </Button>
             </Form>
         </>

@@ -1,5 +1,5 @@
 import { Comment } from "antd"
-import { UserOutlined } from "@ant-design/icons";
+import { FormOutlined } from "@ant-design/icons";
 import moment from "moment";
 
 const ReviewCard = ({ review }) => {
@@ -7,8 +7,8 @@ const ReviewCard = ({ review }) => {
     return (
         <Comment
             style={{ border: '1px solid #eee', marginBottom: '15px', padding: '10px', }}
-            avatar={<UserOutlined />}
-            datetime={<span>{moment.unix(review.date_of_visit).format("MM-DD-YYYY")}</span>
+            avatar={<FormOutlined />}
+            datetime={<span>Visited on: {moment.unix(review.date_of_visit).format("MM-DD-YYYY")}</span>
             }
             content={
                 <>
@@ -17,7 +17,6 @@ const ReviewCard = ({ review }) => {
                 </>
             }
         >
-
         </Comment>
     )
 }
