@@ -1,8 +1,8 @@
 import { Alert, Form, FormInstance, Input, Modal, Select } from 'antd';
 import { User } from '../User';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Role } from '../../../../functions/src/auth/role';
-import { pathUser } from '../../../Api';
+import { Role } from '../../../../../functions/src/auth/role';
+import { pathUser } from '../../../../Api';
 
 interface ISetUserModalProps {
   isModalOpen: boolean;

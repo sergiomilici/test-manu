@@ -1,18 +1,10 @@
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
 import { Input, Spin } from 'antd';
-import { fetchUsers } from '../../Api';
+import { fetchUsers } from '../../../Api';
 import { User } from './User';
-import Title from 'antd/es/typography/Title';
 import { UsersTable } from './UsersTable';
-import { matchString } from '../../utils/RegExpUtils';
+import { matchString } from '../../../utils/RegExpUtils';
 import { SetUserModal } from './SetUser/SetUserModal';
-import NavBar from "../NavBar/NavBar"
-
-const Wrapper = styled.div`
-  padding: 20px;
-  text-align: center;
-`
 
 export const Users = () => {
   const [filterUsersText, setFilterUsersText] = useState<string>('');
@@ -56,41 +48,37 @@ export const Users = () => {
 
   return (
     <>
-      <NavBar />
-      <Wrapper>
-        <Title>Users</Title>
-        {!loadingUsers &&
-          <>
-            <Input placeholder="Filter users"
-              onChange={onSearch}
-              style={{ width: '100%', marginBottom: '20px' }}
-            />
-            <UsersTable
-              users={filteredUsers}
-              onEditUser={(user: User) => {
-                setEditingUser(user);
-                setIsModalOpen(true);
-              }}
-              onUserRemoved={(user: User) => {
-                setUsers(users.filter(u => u.uid !== user.uid))
-              }}
-            />
-            {editingUser &&
-              <SetUserModal
-                isModalOpen={isModalOpen}
-                user={editingUser}
-                onClose={() => setIsModalOpen(false)}
-                onUserEdited={(user) => {
-                  const filteredUsers = users.filter(u => u.uid !== user.uid);
-                  filteredUsers.push(user);
-                  setUsers(filteredUsers);
-                  setIsModalOpen(false);
-                }}
-              />
-            }
-          </>}
-        {loadingUsers && <Spin />}
-      </Wrapper>
+      {!loadingUsers &&
+      <>
+        <Input placeholder="Filter users"
+               onChange={onSearch}
+               style={{width: '100%', marginBottom: '20px'}}
+        />
+        <UsersTable
+          users={filteredUsers}
+          onEditUser={(user: User) => {
+            setEditingUser(user);
+            setIsModalOpen(true);
+          }}
+          onUserRemoved={(user: User) => {
+            setUsers(users.filter(u => u.uid !== user.uid))
+          }}
+        />
+        {editingUser &&
+        <SetUserModal
+          isModalOpen={isModalOpen}
+          user={editingUser}
+          onClose={() => setIsModalOpen(false)}
+          onUserEdited={(user) => {
+            const filteredUsers = users.filter(u => u.uid !== user.uid);
+            filteredUsers.push(user);
+            setUsers(filteredUsers);
+            setIsModalOpen(false);
+          }}
+        />
+        }
+      </>}
+      {loadingUsers && <Spin />}
     </>
   )
 }

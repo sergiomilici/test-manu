@@ -3,7 +3,7 @@ import { AuthProvider } from './Auth/Auth';
 import Restaurants from './Restaurants/Restaurants';
 import RestaurantView from './RestaurantView/RestaurantView';
 import Dashboard from './Dashboard/Dashboard';
-import { Users } from './Users/Users';
+import { Admin } from './Admin/Admin';
 
 export const PrivateRoutes = () => {
 
@@ -12,7 +12,7 @@ export const PrivateRoutes = () => {
       <Route exact path="/restaurants" component={Restaurants} />
       <Route exact path="/restaurant/:id" component={RestaurantView} />
       <Route exact path="/dashboard" component={Dashboard} />
-      <Route exact path="/users" component={Users} />
+      <Route exact path="/admin" component={Admin} />
       <Route exact path="/" component={Restaurants} />
     </AuthProvider>
   )

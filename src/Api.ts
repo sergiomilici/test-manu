@@ -1,6 +1,6 @@
 import fb from "./firebaseConfig";
-import { getToken } from "./components/Auth/Session";
-import { User } from './components/Users/User';
+import { getToken, setToken } from "./components/Auth/Session";
+import { User } from './components/Admin/Users/User';
 
 const API_URL = `https://us-central1-toptal-project-5f041.cloudfunctions.net/api`
 
@@ -24,6 +24,7 @@ export const getAuthToken = async (): Promise<string> => {
   let token = ''
   try {
     token = await getTokenFromFirebase();
+    setToken(token);
   } catch (e) {
     token = getToken()
   }
@@ -176,5 +177,19 @@ export const fetchPendingReplyReview = async (restaurantId) => {
   }
 
   const response = await fetch(`${API_URL}/reviews/${restaurantId}/pending`, reqOptions)
+  return response.json()
+}
+
+export const deleteRestaurant = async (restaurantId) => {
+  const bearerToken = await getAuthToken()
+  const reqOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    method: 'DELETE',
+  }
+
+  const response = await fetch(`${API_URL}/restaurants/${restaurantId}`, reqOptions)
   return response.json()
 }

@@ -12,15 +12,15 @@ import { isAuthorized } from "../auth/authorized";
 export function restaurantsConfig(app: Application) {
   app.post(
     "/restaurants",
-    // isAuthenticated,
-    // isAuthorized({hasRole: ["admin", "owner"]}),
+    isAuthenticated,
+    isAuthorized({hasRole: ["owner"]}),
     createRestaurant
   );
 
   app.put(
     "/restaurants/:restaurantId",
-    // isAuthenticated,
-    // isAuthorized({hasRole: ["admin", "owner"]}),
+    isAuthenticated,
+    isAuthorized({hasRole: ["admin"]}),
     updateRestaurant
   );
 
@@ -33,22 +33,15 @@ export function restaurantsConfig(app: Application) {
 
   app.get(
     "/restaurants/:restaurantId",
-    // isAuthenticated,
-    // isAuthorized({hasRole: ["admin", "owner"]}),
-    getRestaurantWithId
-  );
-
-  app.get(
-    "/restaurants/:restaurantId",
-    // isAuthenticated,
-    // isAuthorized({hasRole: ["admin", "owner"]}),
+    isAuthenticated,
+    isAuthorized({hasRole: ["admin", "owner"]}),
     getRestaurantWithId
   );
 
   app.delete(
     "/restaurants/:restaurantId",
-    // isAuthenticated,
-    // isAuthorized({hasRole: ["admin", "owner"]}),
+    isAuthenticated,
+    isAuthorized({hasRole: ["admin"]}),
     deleteRestaurant
   );
 }

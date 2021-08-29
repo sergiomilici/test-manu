@@ -1,4 +1,4 @@
-import { Role } from '../../../functions/src/auth/role';
+import { Role } from '../../../../functions/src/auth/role';
 
 export interface User {
   uid: string;
