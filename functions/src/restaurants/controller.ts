@@ -62,9 +62,9 @@ export const getRestaurants = async (req: Request, res: Response): Promise<void>
   try {
     // TODO: get role and UID from req.locals
     console.log("-------- get role and uid from res.locals --------");
-    const role: Role = "user";
-    const uid = TEST_UID;
-    // const {role, email, uid} = res.locals;
+    // const role: Role = "user";
+    // const uid = TEST_UID;
+    const {role, uid} = res.locals;
 
     switch (role) {
       case "owner" as Role: {

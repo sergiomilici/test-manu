@@ -6,6 +6,8 @@ import {
   getRestaurantWithId,
   updateRestaurant
 } from "./controller";
+import { isAuthenticated } from "../auth/authenticated";
+import { isAuthorized } from "../auth/authorized";
 
 export function restaurantsConfig(app: Application) {
   app.post(
@@ -24,8 +26,8 @@ export function restaurantsConfig(app: Application) {
 
   app.get(
     "/restaurants",
-    // isAuthenticated,
-    // isAuthorized({hasRole: ["admin", "owner"]}),
+    isAuthenticated,
+    isAuthorized({hasRole: ["admin", "owner", "user"]}),
     getRestaurants
   );
 
