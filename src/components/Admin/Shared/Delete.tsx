@@ -1,31 +1,33 @@
-import { User } from './User';
-import { Button, notification, Popconfirm } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { notification, Popconfirm } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
-import { deleteUser } from '../../../Api';
+import styled from 'styled-components';
+
+export type DeleteType = 'review' | 'reply'
 
 interface IRemoveUserProps {
-  user: User;
-  onRemoveUser: (user: User) => void;
+  typeText: DeleteType;
+  removeFn: () => Promise<void>
 }
 
+const Action = styled.a`
+  margin-right: 5px;
+`
 
-export const RemoveUser = ({user, onRemoveUser}: IRemoveUserProps) => {
+export const Delete = ({typeText, removeFn}: IRemoveUserProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isShowing, setIsShowing] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const removeUser = useCallback(async () => {
+  const removeCallback = useCallback(async () => {
     try {
       setIsLoading(true);
       setErrorMessage('');
-      await deleteUser(user.uid);
-      onRemoveUser(user);
+      await removeFn()
       setIsShowing(false);
       notification.success({
         message: 'Success!!',
         description:
-          `There user "${user.displayName}" was removed.`,
+          `There ${typeText} was removed.`,
       });
     } catch (e) {
       setErrorMessage('Something went wrong');
@@ -33,7 +35,7 @@ export const RemoveUser = ({user, onRemoveUser}: IRemoveUserProps) => {
     } finally {
       setIsLoading(false);
     }
-  }, [user])
+  }, [])
 
   useEffect(() => {
     if (!errorMessage) {
@@ -42,7 +44,7 @@ export const RemoveUser = ({user, onRemoveUser}: IRemoveUserProps) => {
     notification.error({
       message: 'Error',
       description:
-        'There was an error while trying to delete the user. Please try again',
+        `There was an error while trying to delete the ${typeText}. Please try again`,
     });
   }, [errorMessage])
 
@@ -50,16 +52,18 @@ export const RemoveUser = ({user, onRemoveUser}: IRemoveUserProps) => {
     <Popconfirm
       visible={isLoading || isShowing}
       placement="topRight"
-      title={`Confirm remove user "${user.displayName}"?`}
-      onConfirm={removeUser}
+      title={`Confirm remove this ${typeText}?`}
+      onConfirm={removeCallback}
       onCancel={() => setIsShowing(false)}
       okText={`${isLoading ? 'Deleting' : 'Yes'}`} cancelText="No"
       okButtonProps={{disabled: isLoading}}
       cancelButtonProps={{disabled: isLoading}}
     >
-      <Button style={{marginRight: '5px'}} shape="circle" icon={<DeleteOutlined />}
+      <Action style={{marginRight: '5px'}}
               onClick={() => setIsShowing(true)}
-      />
+      >
+        Delete
+      </Action>
     </Popconfirm>
   )
 }

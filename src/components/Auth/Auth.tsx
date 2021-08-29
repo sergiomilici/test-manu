@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
       if (user) {
         const response = await getUser(user.uid)
         // @ts-ignore
-        const { role } = response.user;
+        const {role} = response.user;
         setCurrentAuthContext({
           ...currentAuthContext,
           currentUser: user,

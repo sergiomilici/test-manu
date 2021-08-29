@@ -1,22 +1,29 @@
 import { useLoadRestaurants } from './useLoadRestaurants';
 import { Restaurant } from '../../../../functions/src/restaurants/restaurant';
-import { Input, Spin } from 'antd';
+
+import { Input, notification, Spin } from 'antd';
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { matchString } from '../../../utils/RegExpUtils';
 import { RestaurantsTable } from './RestaurantsTable';
+import { UpdateRestaurantModal } from './UpdateRestaurantModal';
+import { EditReviewsModal } from './Reviews/EditReviewsModal';
 
 export const Restaurants = () => {
   const [filterRestaurantText, setFilterRestaurantText] = useState<string>('');
-  const {isLoading, data, error, removeData} = useLoadRestaurants<Restaurant>();
+  const {isLoading, data, removeElement, replaceElement} = useLoadRestaurants<Restaurant>();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isReviewsModalOpen, setReviewsIsModalOpen] = useState<boolean>(false);
+  const [editingRestaurant, setEditingRestaurant] = useState<Restaurant | null>(null);
   const restaurants = data;
 
   const filteredRestaurants = useMemo(() => {
     return restaurants.filter(u => matchString(filterRestaurantText, u.name))
-      .sort(function compare(res1, res2) {
-        if (res1.uid < res2.uid) {
+
+      .sort(function compare(res1: Restaurant, res2: Restaurant) {
+        if (res1.id! < res2.id!) {
           return -1;
         }
-        if (res1.name > res2.uid) {
+        if (res1.id! > res2.id!) {
           return 1;
         }
         return 0;
@@ -38,9 +45,45 @@ export const Restaurants = () => {
           />
           <RestaurantsTable
             restaurants={filteredRestaurants}
-            onRestaurantRemoved={removeData}
-            onEditRestaurant={e => console.log(e)}
+            onRestaurantRemoved={removeElement}
+            onEditRestaurant={restaurant => {
+              setEditingRestaurant(restaurant);
+              setIsModalOpen(true);
+            }}
+            openReviewsModal={(restaurant: Restaurant) => {
+              setEditingRestaurant(restaurant);
+              setReviewsIsModalOpen(true);
+            }}
           />
+          {editingRestaurant && (
+            <UpdateRestaurantModal
+              isModalOpen={isModalOpen}
+              restaurant={editingRestaurant}
+              onClose={() => {
+                console.log('onClose');
+                setIsModalOpen(false);
+                setEditingRestaurant(null);
+              }}
+              onRestaurantEdited={(restaurant: Restaurant) => {
+                replaceElement(restaurant);
+                setIsModalOpen(false);
+                setEditingRestaurant(null);
+                notification.success({
+                  message: 'Success!!',
+                  description:
+                    `The restaurant "${restaurant.name}" was updated correctly.`,
+                })
+              }} />
+          )}
+          {isReviewsModalOpen && editingRestaurant && (
+            <EditReviewsModal
+              restaurantId={editingRestaurant.id!}
+              isModalOpen={isReviewsModalOpen}
+              onClose={() => {
+                setReviewsIsModalOpen(false);
+              }}
+            />
+          )}
         </>)
       }
     </>

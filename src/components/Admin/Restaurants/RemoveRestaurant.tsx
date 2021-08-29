@@ -21,13 +21,18 @@ export const RemoveRestaurant = ({restaurant, onRemoveRestaurant}: IRemoveRestau
       await deleteRestaurant(restaurant.id);
       onRemoveRestaurant(restaurant);
       setIsShowing(false);
+      notification.success({
+        message: 'Success!!',
+        description:
+          `There restaurant "${restaurant.name}" was removed.`,
+      });
     } catch (e) {
       setErrorMessage('Something went wrong');
       console.error(e)
     } finally {
       setIsLoading(false);
     }
-  }, [restaurant])
+  }, [restaurant, onRemoveRestaurant])
 
   useEffect(() => {
     if (!errorMessage) {

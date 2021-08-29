@@ -2,5 +2,6 @@ export interface IFetchModel<T> {
   isLoading: boolean;
   data: T[];
   error: any;
-  removeData: (element: T) => void
+  removeElement: (element: T) => void
+  replaceElement: (element: T) => void
 }

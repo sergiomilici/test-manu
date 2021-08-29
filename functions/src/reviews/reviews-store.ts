@@ -29,7 +29,12 @@ export const getReviewRef = async (restaurantId: string, reviewId: string) => {
   return reviewRef;
 };
 
-export const addReplyToReview = async (restaurantId: string, reviewId: string, reply: string): Promise<void> => {
+export const addReplyToReview = async (
+  restaurantId: string,
+  reviewId: string,
+  reply: string,
+  userId: string
+): Promise<void> => {
   const reviewRef = await getReviewRef(restaurantId, reviewId);
   const reviewDoc = await reviewRef.get();
   const review = reviewDoc.data() as Review;
@@ -41,6 +46,7 @@ export const addReplyToReview = async (restaurantId: string, reviewId: string, r
   await reviewRef.update({
     reply,
     reply_date: getUnixTimestamp(),
+    reply_user_id: userId,
   });
 
   // Update the review if it is highest or lowest rated

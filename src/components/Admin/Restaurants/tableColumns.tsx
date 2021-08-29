@@ -13,9 +13,14 @@ const IconsWrapper = styled.div`
 interface IGetTableProps {
   onEditRestaurant: (user: Restaurant) => void;
   onRestaurantRemoved: (user: Restaurant) => void;
+  openReviewsModal: (restaurant: Restaurant) => void
 }
 
-export const getTableColumns = ({onEditRestaurant, onRestaurantRemoved}: IGetTableProps) => ([
+export const getTableColumns = ({
+                                  onEditRestaurant,
+                                  onRestaurantRemoved,
+                                  openReviewsModal
+                                }: IGetTableProps) => ([
   {
     title: 'ID',
     dataIndex: 'id',
@@ -40,10 +45,27 @@ export const getTableColumns = ({onEditRestaurant, onRestaurantRemoved}: IGetTab
     title: 'Country',
     key: 'country',
     dataIndex: 'country',
-  }, {
+  },
+  {
     title: 'Average Rating',
     key: 'avg_rating',
     dataIndex: 'avg_rating',
+  },
+  {
+    title: 'Reviews',
+    key: 'see_reviews',
+    render: (text, restaurant) => {
+      const hasReviews = !!restaurant.highest_rated_review || !!restaurant.lowest_rated_review;
+      if (!hasReviews) {
+        return <span>No reviews</span>
+      }
+      return (
+        <a href="#reviews" onClick={e => {
+          e.preventDefault();
+          openReviewsModal(restaurant);
+        }}>See Reviews</a>
+      )
+    }
   },
   {
     title: 'Actions',
@@ -51,8 +73,10 @@ export const getTableColumns = ({onEditRestaurant, onRestaurantRemoved}: IGetTab
     render: (text, restaurant) => {
       return (
         <IconsWrapper>
-          <RemoveRestaurant restaurant={restaurant}
-                            onRemoveRestaurant={() => onRestaurantRemoved(restaurant)} />
+          <RemoveRestaurant
+            restaurant={restaurant}
+            onRemoveRestaurant={() => onRestaurantRemoved(restaurant)}
+          />
           <Button shape="circle" icon={<EditOutlined />}
                   onClick={() => onEditRestaurant(restaurant)} />
         </IconsWrapper>

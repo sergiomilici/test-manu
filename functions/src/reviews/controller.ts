@@ -26,7 +26,7 @@ export const validateReviewPayload = (reviewPayload: CreateReviewPayload) => {
   if (!reviewPayload) {
     throw new Error("Invalid review payload");
   }
-  const { comment, date_of_visit, stars } = reviewPayload;
+  const {comment, date_of_visit, stars} = reviewPayload;
 
   if (comment.length === 0 || comment.length > MAX_COMMENT_LENGTH) {
     throw new Error(
@@ -48,7 +48,7 @@ export const validateReviewPayload = (reviewPayload: CreateReviewPayload) => {
 
 export const createReview = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { restaurantId } = req.params;
+    const {restaurantId} = req.params;
     const reviewPayload = req.body as CreateReviewPayload;
     validateReviewPayload(reviewPayload);
 
@@ -79,7 +79,7 @@ export const createReview = async (req: Request, res: Response): Promise<void> =
 
     console.log("Review created with ID: ", reviewId);
 
-    res.send({ ok: true });
+    res.send({ok: true});
   } catch (err) {
     handleError(res, err);
   }
@@ -87,7 +87,8 @@ export const createReview = async (req: Request, res: Response): Promise<void> =
 
 export const replyToReview = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { restaurantId, reviewId } = req.params;
+    const {restaurantId, reviewId} = req.params;
+    const {uid} = res.locals;
     const replyReviewPayload = req.body as ReplyReviewPayload;
 
     const replyComment = replyReviewPayload?.reply || "";
@@ -96,9 +97,9 @@ export const replyToReview = async (req: Request, res: Response): Promise<void> 
     }
 
     // Add the reply to the review
-    await addReplyToReview(restaurantId, reviewId, replyComment);
+    await addReplyToReview(restaurantId, reviewId, replyComment, uid);
 
-    res.send({ ok: true });
+    res.send({ok: true});
   } catch (err) {
     handleError(res, err);
   }
@@ -106,7 +107,7 @@ export const replyToReview = async (req: Request, res: Response): Promise<void> 
 
 export const removeReview = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { restaurantId, reviewId } = req.params;
+    const {restaurantId, reviewId} = req.params;
     await deleteReview(restaurantId, reviewId);
     res.sendStatus(200);
   } catch (err) {
@@ -116,7 +117,7 @@ export const removeReview = async (req: Request, res: Response): Promise<void> =
 
 export const removeReply = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { restaurantId, reviewId } = req.params;
+    const {restaurantId, reviewId} = req.params;
     await deleteReply(restaurantId, reviewId);
     res.sendStatus(200);
   } catch (err) {
@@ -126,7 +127,7 @@ export const removeReply = async (req: Request, res: Response): Promise<void> =>
 
 export const updateReview = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { restaurantId, reviewId } = req.params;
+    const {restaurantId, reviewId} = req.params;
     const reviewPayload = req.body as Partial<CreateReviewPayload>;
 
     await updateReviewData(restaurantId, reviewId, reviewPayload);
@@ -138,7 +139,7 @@ export const updateReview = async (req: Request, res: Response): Promise<void> =
 
 export const getPendingReplyReviews = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { restaurantId } = req.params;
+    const {restaurantId} = req.params;
     const reviewsPendingToReply = await getReviewsPendingToReply(restaurantId);
     res.send({
       reviews: reviewsPendingToReply,
@@ -150,7 +151,7 @@ export const getPendingReplyReviews = async (req: Request, res: Response): Promi
 
 export const getReviews = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { restaurantId } = req.params;
+    const {restaurantId} = req.params;
     const reviews = await getReviewsForRestaurant(restaurantId);
     res.send({
       reviews,

@@ -4,7 +4,6 @@ import Restaurants from './Restaurants/Restaurants';
 import RestaurantView from './RestaurantView/RestaurantView';
 import { Admin } from './Admin/Admin';
 
-
 export const PrivateRoutes = () => {
 
   return (

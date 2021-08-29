@@ -1,39 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { fetchRestaurants } from '../../../Api';
 import { IFetchModel } from '../../../FetchModel';
+import { useFetchData } from '../useFetchData';
+import { Restaurant } from '../../../../functions/src/restaurants/restaurant';
 
-export function useLoadRestaurants<T>(): IFetchModel<T> {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<any | undefined>();
-  const [restaurants, setRestaurants] = useState<T[]>([])
+export function useLoadRestaurants<T extends Restaurant>(): IFetchModel<T> {
+  const loadRestaurants = useCallback(async (): Promise<T[]> => {
+    const response = await fetchRestaurants();
+    return response.restaurants;
+  }, []);
 
-  useEffect(() => {
-    const loadRestaurants = async () => {
-      try {
-        setIsLoading(true);
-        setError(undefined);
-        const response = await fetchRestaurants();
-        setRestaurants(response.restaurants)
-      } catch (e) {
-        console.error(e);
-        setError(e.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadRestaurants();
-  }, [])
-
-  const removeElement = (restaurant: T) => {
-    // @ts-ignore
-    const updatedRestaurants = restaurants.filter(r => r.id !== restaurant.id);
-    setRestaurants(updatedRestaurants)
-  }
-
-  return {
-    isLoading,
-    data: restaurants,
-    error,
-    removeData: removeElement,
-  }
+  return useFetchData<T>(loadRestaurants);
 }

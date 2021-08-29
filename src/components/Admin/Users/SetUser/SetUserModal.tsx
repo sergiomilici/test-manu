@@ -69,7 +69,7 @@ export const SetUserModal = ({user, isModalOpen, onClose, onUserEdited}: ISetUse
   }, [user])
 
   return (
-    <Modal title="Edit user" visible={isModalOpen} onOk={onFinish} onCancel={onClose}
+    <Modal title="Edit User" visible={isModalOpen} onOk={onFinish} onCancel={onClose}
            okText={isLoading ? 'Updating' : 'Save'}
            cancelButtonProps={{
              disabled: isLoading
@@ -98,7 +98,7 @@ export const SetUserModal = ({user, isModalOpen, onClose, onUserEdited}: ISetUse
         <Form.Item
           label="Display Name"
           name="displayName"
-          rules={[{required: true, message: 'Please input your display name'}]}
+          rules={[{required: true, whitespace: true, message: 'Please input user\'s display name'}]}
         >
           <Input />
         </Form.Item>
