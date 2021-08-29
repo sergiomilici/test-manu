@@ -166,3 +166,18 @@ export const postReview = async (id:string, stars: number,
     }
     await fetch(`${API_URL}/reviews/${id}`, reqOptions)
 }
+
+export const fetchPendingReplyReview = async (restaurantId) => {
+
+  const bearerToken = await getAuthToken()
+  const reqOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    method: 'GET',
+  }
+
+  const response = await fetch(`${API_URL}/reviews/${restaurantId}/pending`, reqOptions)
+  return response.json()
+}

@@ -72,7 +72,7 @@ const RestaurantView = () => {
                     restaurantId={restaurantId}
                     onReviewAdded={(restaurant) => { setRestaurant(restaurant) }} />
 
-                <ReviewsList restaurantId={restaurantId} />
+                <ReviewsList restaurant={restaurant} />
 
             </div>
         </>

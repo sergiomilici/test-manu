@@ -13,7 +13,7 @@ interface Review {
 }
 
 
-const ReviewsList = ({ restaurantId }) => {
+const ReviewsList = ({ restaurant }) => {
 
     const [reviews, setReviews] = useState<Review[]>([])
     const [isLoading, setIsLoading] = useState(false)
@@ -22,7 +22,7 @@ const ReviewsList = ({ restaurantId }) => {
         const getReviewsById = async () => {
             try {
                 setIsLoading(true)
-                const response = await fetchReviewsByRestaurantId(restaurantId)
+                const response = await fetchReviewsByRestaurantId(restaurant.id)
                 setReviews(response.reviews)
             } catch (err) {
                 console.log(err)
@@ -31,16 +31,22 @@ const ReviewsList = ({ restaurantId }) => {
             }
         }
         getReviewsById()
-    }, [restaurantId])
+    }, [restaurant])
 
     return (
         <>
-            <h2>User's reviews</h2>
-            {isLoading && <Spin style={{ margin: 'auto' }} size="large" />}
+            {isLoading &&
+                <div style={{ textAlign: 'center', }}>
+                    <Spin size="large" />
+                </div>}
 
-            {(reviews || []).map((review) => (
-                <ReviewCard review={review} key={review.id} />
-            ))}
+            {!isLoading && <>
+                <h2>User's reviews</h2>
+                {(reviews || []).map((review) => (
+                    <ReviewCard review={review} key={review.id} />
+                ))}
+            </>}
+
         </>
     )
 }

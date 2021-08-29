@@ -16,7 +16,7 @@ interface FormValues {
   role: Role;
 }
 
-export const SetUserModal = ({user, isModalOpen, onClose, onUserEdited}: ISetUserModalProps) => {
+export const SetUserModal = ({ user, isModalOpen, onClose, onUserEdited }: ISetUserModalProps) => {
   const formRef = useRef<FormInstance<FormValues> | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -69,14 +69,14 @@ export const SetUserModal = ({user, isModalOpen, onClose, onUserEdited}: ISetUse
   }, [user])
 
   return (
-    <Modal title="Basic Modal" visible={isModalOpen} onOk={onFinish} onCancel={onClose}
-           okText={isLoading ? 'Updating' : 'Save'}
-           cancelButtonProps={{
-             disabled: isLoading
-           }}
-           okButtonProps={{
-             disabled: isLoading
-           }}
+    <Modal title="Edit user" visible={isModalOpen} onOk={onFinish} onCancel={onClose}
+      okText={isLoading ? 'Updating' : 'Save'}
+      cancelButtonProps={{
+        disabled: isLoading
+      }}
+      okButtonProps={{
+        disabled: isLoading
+      }}
     >
 
       {errorMessage && (
@@ -84,12 +84,12 @@ export const SetUserModal = ({user, isModalOpen, onClose, onUserEdited}: ISetUse
           message={errorMessage}
           type="error"
           showIcon
-          style={{marginBottom: '20px'}}
+          style={{ marginBottom: '20px' }}
         />)}
       <Form
         name="basic"
-        labelCol={{span: 8}}
-        wrapperCol={{span: 16}}
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 16 }}
         initialValues={initialValues}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
@@ -98,12 +98,12 @@ export const SetUserModal = ({user, isModalOpen, onClose, onUserEdited}: ISetUse
         <Form.Item
           label="Display Name"
           name="displayName"
-          rules={[{required: true, message: 'Please input your display name'}]}
+          rules={[{ required: true, message: 'Please input your display name' }]}
         >
           <Input />
         </Form.Item>
 
-        <Form.Item name="role" label="Role" rules={[{required: true}]}>
+        <Form.Item name="role" label="Role" rules={[{ required: true }]}>
           <Select
             placeholder="Select a option and change input text above"
           >
