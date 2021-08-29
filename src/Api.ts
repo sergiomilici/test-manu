@@ -101,7 +101,23 @@ export const fetchRestaurantById = async (id) => {
     method: 'GET',
   }
 
-  const response = await fetch(`${API_URL}/restaurants`, reqOptions)
+  const response = await fetch(`${API_URL}/restaurants/${id}`, reqOptions)
+
+  return await response.json()
+}
+
+export const fetchReviewsByRestaurantId = async (id) => {
+  const bearerToken = await getAuthToken()
+
+  const reqOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    method: 'GET',
+  }
+
+  const response = await fetch(`${API_URL}/reviews/${id}`, reqOptions)
 
   return await response.json()
 }
@@ -129,4 +145,36 @@ export const deleteUser = async (userId: string) => {
     method: 'DELETE',
   }
   await fetch(`${API_URL}/users/${userId}`, reqOptions)
+}
+
+export const postReview = async (id:string, stars: number,
+  date_of_visit: number,
+  comment: string) => {
+
+    const data = {stars, date_of_visit, comment}
+
+    const bearerToken = await getAuthToken()
+    const reqOptions = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${bearerToken}`,
+      },
+      method: 'POST',
+      body:JSON.stringify(data)
+    }
+    await fetch(`${API_URL}/reviews/${id}`, reqOptions)
+}
+
+export const fetchPendingReplyReview = async (restaurantId) => {
+  const bearerToken = await getAuthToken()
+  const reqOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    method: 'GET',
+  }
+
+  const response = await fetch(`${API_URL}/reviews/${restaurantId}/pending`, reqOptions)
+  return response.json()
 }

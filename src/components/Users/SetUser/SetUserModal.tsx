@@ -69,7 +69,7 @@ export const SetUserModal = ({user, isModalOpen, onClose, onUserEdited}: ISetUse
   }, [user])
 
   return (
-    <Modal title="Basic Modal" visible={isModalOpen} onOk={onFinish} onCancel={onClose}
+    <Modal title="Edit user" visible={isModalOpen} onOk={onFinish} onCancel={onClose}
            okText={isLoading ? 'Updating' : 'Save'}
            cancelButtonProps={{
              disabled: isLoading

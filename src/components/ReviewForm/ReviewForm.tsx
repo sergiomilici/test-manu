@@ -1,37 +1,48 @@
 import { useState } from "react";
-import { Form, DatePicker, Rate, Input, Button } from "antd";
+import { Form, DatePicker, Rate, Input, Button, notification } from "antd";
+import moment from 'moment';
+import { postReview, fetchRestaurantById } from "../../Api";
 
 const { TextArea } = Input;
 
-const printSubmit = (values) => {
-    console.log(values);
-};
+type Star = 1 | 2 | 3 | 4 | 5
 
-const ReviewForm = () => {
-    const [userReview, setUserReview] = useState({
-        rating: 0,
-        date: null,
-        message: "",
-    });
+const ReviewForm = ({ restaurantId, onReviewAdded }) => {
+    const [stars, setStars] = useState<Star | undefined>()
+    const [dateOfVisit, setDateOfVisit] = useState<moment.Moment | null>()
+    const [comment, setComment] = useState<string>("")
+    const [isLoading, setIsLoading] = useState(false)
+    const [form] = Form.useForm()
 
-    //   const userReview = {
-    //       rating: number,
-    //       date: date,
-    //       message: string,
-    //   }
-
-    //dates timestamp seconds
+    const handlePostReview = async () => {
+        try {
+            setIsLoading(true)
+            await postReview(restaurantId, stars!, moment(dateOfVisit).unix(), comment)
+            form.resetFields();
+            const restaurant = await fetchRestaurantById(restaurantId)
+            onReviewAdded(restaurant)
+        } catch (err) {
+            notification.error({
+                message: 'Error',
+                description:
+                    'There was an error while trying to submit your review. Please try again',
+            });
+        } finally {
+            setIsLoading(false)
+        }
+    };
 
     return (
         <>
-
             <Form
-                style={{ width: 500, margin: 'auto', }}
-                onFinish={printSubmit}
-            >         <h2>Leave you review</h2>
+                form={form}
+                style={{ width: 500, margin: 'auto', marginBottom: '30px', }}
+                onFinish={handlePostReview}
+            >         <h2>Leave your review</h2>
                 <Form.Item
                     name="rate"
                     label="Rate"
+                    initialValue={0}
                     rules={[
                         {
                             required: true,
@@ -39,11 +50,12 @@ const ReviewForm = () => {
                         },
                     ]}
                 >
-                    <Rate onChange={(value) => console.log(value)} />
+                    <Rate onChange={(value) => setStars(value as Star)} />
                 </Form.Item>
                 <Form.Item
                     name="date"
                     label="Date of visit"
+                    initialValue={""}
                     rules={[
                         {
                             required: true,
@@ -54,10 +66,11 @@ const ReviewForm = () => {
                     <DatePicker
                         placeholder="Select date"
                         format={"MM-DD-YYYY"}
-                        onChange={(date, dateString) => console.log(date, dateString)}
+                        onChange={(date) => setDateOfVisit(date)}
                     />
                 </Form.Item>
                 <Form.Item
+                    initialValue={""}
                     name="comment"
                     rules={[
                         {
@@ -71,10 +84,15 @@ const ReviewForm = () => {
                         maxLength={250}
                         autoSize={{ minRows: 4, maxRows: 4 }}
                         placeholder="Write your review"
+                        onChange={(e) => setComment(e.target.value)}
                     />
                 </Form.Item>
-                <Button type="primary" htmlType="submit">
-                    Send review
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    disabled={isLoading}
+                >
+                    {!isLoading ? 'Send review' : 'Loading'}
                 </Button>
             </Form>
         </>
