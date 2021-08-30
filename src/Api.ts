@@ -295,3 +295,36 @@ export const deleteReply = async (restaurantId, reviewId: string) => {
 
   await fetch(`${API_URL}/reviews/${restaurantId}/${reviewId}/reply`, reqOptions)
 }
+
+export const postReplyToReview = async ( restaurantId: string, reviewId: string, comment: string) => {
+  const data = comment
+  const bearerToken = await getAuthToken()
+  const reqOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    method: 'PUT',
+    body:JSON.stringify(data)
+  }
+
+  await fetch(`${API_URL}/reviews/${restaurantId}/${reviewId}/reply`, reqOptions)
+}
+
+export const postRestaurant = async (name: string, city:string, country: string) => {
+  const data = {name, city, country}
+
+  const bearerToken = await getAuthToken()
+  const reqOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    method: 'POST',
+    body:JSON.stringify(data)
+  }
+
+  const response = await fetch(`${API_URL}/restaurants`, reqOptions)
+  return response.json()
+
+}
