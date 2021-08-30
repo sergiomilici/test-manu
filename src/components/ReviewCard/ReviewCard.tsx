@@ -1,5 +1,5 @@
-import { Comment } from "antd"
-import { FormOutlined, StarOutlined, MessageOutlined } from "@ant-design/icons";
+import { Comment, Rate } from "antd"
+import { FormOutlined, MessageOutlined } from "@ant-design/icons";
 import moment from "moment";
 import styled from 'styled-components';
 
@@ -17,7 +17,7 @@ const ReviewCard = ({ review }) => {
             content={
                 <>
                     <p>Username placeholder</p>
-                    <p style={{ marginBottom: '4px', }}>{review.stars} <StarOutlined /></p>
+                    <p style={{ marginBottom: '4px', }}><Rate value={review.stars} disabled={true} style={{fontSize:'12px'}}/></p>
                     <i style={{ fontSize: '17px', }} >{review.comment}</i>
                 </>
             }
