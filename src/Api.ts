@@ -1,6 +1,6 @@
 import fb from "./firebaseConfig";
-import { getToken } from "./components/Auth/Session";
-import { User } from './components/Users/User';
+import { getToken, setToken } from "./components/Auth/Session";
+import { User } from './components/Admin/Users/User';
 
 const API_URL = `https://us-central1-toptal-project-5f041.cloudfunctions.net/api`
 
@@ -24,6 +24,7 @@ export const getAuthToken = async (): Promise<string> => {
   let token = ''
   try {
     token = await getTokenFromFirebase();
+    setToken(token);
   } catch (e) {
     token = getToken()
   }
@@ -147,8 +148,6 @@ export const deleteUser = async (userId: string) => {
   await fetch(`${API_URL}/users/${userId}`, reqOptions)
 }
 
-
-
 export const postReview = async (id:string, stars: number,
   date_of_visit: number,
   comment: string) => {
@@ -167,8 +166,8 @@ export const postReview = async (id:string, stars: number,
     await fetch(`${API_URL}/reviews/${id}`, reqOptions)
 }
 
-export const fetchPendingReplyReview = async (restaurantId: string) => {
 
+export const fetchPendingReplyReview = async (restaurantId) => {
   const bearerToken = await getAuthToken()
   const reqOptions = {
     headers: {
@@ -182,9 +181,25 @@ export const fetchPendingReplyReview = async (restaurantId: string) => {
   return response.json()
 }
 
+
 export const postReplyToReview = async ( restaurantId: string, reviewId: string, comment: string) => {
 
   const data = comment
+  const bearerToken = await getAuthToken()
+  const reqOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+  method: 'PUT',
+  body:JSON.stringify(data)
+}
+
+await fetch(`${API_URL}/reviews/${restaurantId}/${reviewId}/reply`, reqOptions)
+}
+
+
+export const deleteRestaurant = async (restaurantId) => {
 
   const bearerToken = await getAuthToken()
   const reqOptions = {
@@ -192,12 +207,13 @@ export const postReplyToReview = async ( restaurantId: string, reviewId: string,
       'Content-Type': 'application/json',
       Authorization: `Bearer ${bearerToken}`,
     },
-    method: 'PUT',
-    body:JSON.stringify(data)
+    method: 'DELETE',
   }
 
-  await fetch(`${API_URL}/reviews/${restaurantId}/${reviewId}/reply`, reqOptions)
+  await fetch(`${API_URL}/restaurants/${restaurantId}`, reqOptions)
 }
+
+
 
 export const postRestaurant = async (name: string, city:string, country: string) => {
 
@@ -216,3 +232,4 @@ export const postRestaurant = async (name: string, city:string, country: string)
   await fetch(`${API_URL}/restaurants`, reqOptions)
 
 }
+

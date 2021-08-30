@@ -3,17 +3,18 @@ import { CreateRestaurantPayload } from "./create-restaurant-payload";
 import {
   createRestaurantDoc,
   getAllRestaurants,
-  getOwnerRestaurants, getRestaurantById,
+  getOwnerRestaurants,
+  getRestaurantById,
   getRestaurantDoc,
   removeRestaurant,
   updateRestaurantData,
 } from "./restaurants-store";
-import { handleError, TEST_UID } from "../utils";
+import { handleError } from "../utils";
 import { Role } from "../auth/role";
 import { Restaurant } from "./restaurant";
 
 const validateRestaurantPayload = (restaurantPayload: CreateRestaurantPayload) => {
-  const { name, country, city } = restaurantPayload;
+  const {name, country, city} = restaurantPayload;
   if (!name || name.length === 0 || name.length > 30) {
     throw new Error("Invalid arguments: name length must be between 0 and 30");
   }
@@ -29,9 +30,10 @@ export const createRestaurant = async (req: Request, res: Response): Promise<voi
   try {
     const createRestaurantPayload = req.body as CreateRestaurantPayload;
     validateRestaurantPayload(createRestaurantPayload);
-    const restaurantRef = await createRestaurantDoc(createRestaurantPayload, TEST_UID);
+    const {uid} = res.locals;
+    const restaurantRef = await createRestaurantDoc(createRestaurantPayload, uid);
     console.log("Restaurant created with ID: ", restaurantRef.id);
-    res.sendStatus(200);
+    res.send({ restaurantId: restaurantRef.id });
   } catch (err) {
     handleError(res, err);
   }
@@ -39,7 +41,7 @@ export const createRestaurant = async (req: Request, res: Response): Promise<voi
 
 export const updateRestaurant = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { restaurantId } = req.params;
+    const {restaurantId} = req.params;
     const updateRestaurantPayload = req.body as Partial<CreateRestaurantPayload>;
 
     const restaurantDoc = await getRestaurantDoc(restaurantId);
@@ -60,23 +62,19 @@ export const updateRestaurant = async (req: Request, res: Response): Promise<voi
 
 export const getRestaurants = async (req: Request, res: Response): Promise<void> => {
   try {
-    // TODO: get role and UID from req.locals
-    console.log("-------- get role and uid from res.locals --------");
-    // const role: Role = "user";
-    // const uid = TEST_UID;
     const {role, uid} = res.locals;
 
     switch (role) {
       case "owner" as Role: {
         const restaurants = await getOwnerRestaurants(uid);
-        res.send({ restaurants });
+        res.send({restaurants});
         break;
       }
       case "user" as Role:
       case "admin" as Role:
       default: {
         const restaurants = await getAllRestaurants();
-        res.send({ restaurants: restaurants });
+        res.send({restaurants: restaurants});
         break;
       }
     }
@@ -87,7 +85,7 @@ export const getRestaurants = async (req: Request, res: Response): Promise<void>
 
 export const deleteRestaurant = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { restaurantId } = req.params;
+    const {restaurantId} = req.params;
     await removeRestaurant(restaurantId);
     res.sendStatus(200);
   } catch (err) {

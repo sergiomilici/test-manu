@@ -1,36 +1,33 @@
-import { User } from './User';
 import { Button, notification, Popconfirm } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useCallback, useEffect, useState } from 'react';
-import { deleteUser } from '../../Api';
+import { Restaurant } from '../../../../functions/src/restaurants/restaurant';
+import { deleteRestaurant } from '../../../Api';
 
-interface IRemoveUserProps {
-  user: User;
-  onRemoveUser: (user: User) => void;
+interface IRemoveRestaurantProps {
+  restaurant: Restaurant;
+  onRemoveRestaurant: (restaurant: Restaurant) => void;
 }
 
-
-export const RemoveUser = ({user, onRemoveUser}: IRemoveUserProps) => {
+export const RemoveRestaurant = ({restaurant, onRemoveRestaurant}: IRemoveRestaurantProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isShowing, setIsShowing] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const removeUser = useCallback(async () => {
+  const removeRestaurant = useCallback(async () => {
     try {
       setIsLoading(true);
       setErrorMessage('');
-      await deleteUser(user.uid);
-      onRemoveUser(user);
+      await deleteRestaurant(restaurant.id);
+      onRemoveRestaurant(restaurant);
       setIsShowing(false);
     } catch (e) {
       setErrorMessage('Something went wrong');
       console.error(e)
     } finally {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000)
+      setIsLoading(false);
     }
-  }, [user])
+  }, [restaurant])
 
   useEffect(() => {
     if (!errorMessage) {
@@ -39,16 +36,16 @@ export const RemoveUser = ({user, onRemoveUser}: IRemoveUserProps) => {
     notification.error({
       message: 'Error',
       description:
-        'There was an error while trying to delete the user. Please try again',
+        'There was an error while trying to delete the restaurant. Please try again',
     });
   }, [errorMessage])
 
   return (
     <Popconfirm
       visible={isLoading || isShowing}
-      placement="top"
-      title={`Confirm remove user "${user.displayName}"?`}
-      onConfirm={removeUser}
+      placement="topRight"
+      title={`Confirm remove restaurant "${restaurant.name}"?`}
+      onConfirm={removeRestaurant}
       onCancel={() => setIsShowing(false)}
       okText={`${isLoading ? 'Deleting' : 'Yes'}`} cancelText="No"
       okButtonProps={{disabled: isLoading}}
