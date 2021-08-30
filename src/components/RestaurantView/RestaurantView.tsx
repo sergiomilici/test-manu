@@ -6,26 +6,14 @@ import ReviewForm from "../ReviewForm/ReviewForm";
 import ReviewsList from "../ReviewsList/ReviewsList";
 import RestaurantCard from "../RestaurantCard/RetsaurantCard";
 import { fetchRestaurantById } from "../../Api";
+import { Restaurant } from '../../../functions/src/restaurants/restaurant';
+import styled from 'styled-components';
 
-interface Review {
-    id?: string;
-    stars: number;
-    date_of_visit: number;
-    date_of_comment: number;
-    comment: string;
-    reply: string;
-}
-
-interface Restaurant {
-    id?: string;
-    uid: string; // user id
-    name: string;
-    city: string;
-    country: string;
-    avg_rating: number;
-    highest_rated_review: Review;
-    lowest_rated_review: Review;
-}
+const Wrapper = styled.div`
+width:500px;
+margin: auto;
+padding-bottom: 20px;
+`
 
 const RestaurantView = () => {
 
@@ -56,25 +44,15 @@ const RestaurantView = () => {
     return (
         <>
             <NavBar />
-
-            <div
-                style={{
-                    width: '500px',
-                    margin: 'auto',
-                    paddingBottom: '20px',
-                }}
-            >
-                {isLoading && <Spin style={{ margin: 'auto' }} size="large" />}
-
+            <Wrapper>
+                {isLoading && <div style={{ marginBottom: '8px', textAlign: 'center', }}><Spin size="large" /></div>}
                 <RestaurantCard restaurant={restaurant} />
-
                 <ReviewForm
                     restaurantId={restaurantId}
                     onReviewAdded={(restaurant) => { setRestaurant(restaurant) }} />
 
                 <ReviewsList restaurant={restaurant} />
-
-            </div>
+            </Wrapper>
         </>
     )
 }

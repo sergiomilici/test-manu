@@ -4,11 +4,18 @@ import { useState } from 'react';
 
 const SignUpForm = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [form] = Form.useForm()
 
   const onFinish = async (values) => {
     try {
       setIsLoading(true)
       await registerUser(values.email, values.password, values.displayName)
+      form.resetFields();
+      notification.success({
+        message: 'Congratulations!',
+        description:
+          'Account successfully created. Please sign in.'
+      });
     } catch (err) {
       notification.error({
         message: 'Error',
@@ -23,6 +30,7 @@ const SignUpForm = () => {
   return (
     <div>
       <Form
+        form={form}
         style={{
           padding: "8px",
         }}
@@ -41,6 +49,7 @@ const SignUpForm = () => {
         <Form.Item
           label="Display Name"
           name="displayName"
+          initialValue={""}
           rules={[
             {
               required: true,
@@ -55,6 +64,7 @@ const SignUpForm = () => {
         <Form.Item
           label="Email"
           name="email"
+          initialValue={""}
           rules={[
             {
               required: true,
@@ -69,6 +79,7 @@ const SignUpForm = () => {
         <Form.Item
           label="Password"
           name="password"
+          initialValue={""}
           rules={[
             {
               required: true,

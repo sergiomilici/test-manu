@@ -3,20 +3,12 @@ import { fetchPendingReplyReview } from '../../Api';
 import { Button, notification } from 'antd';
 import ReplyForm from '../ReplyForm/ReplyForm';
 import styled from 'styled-components';
+import { CheckCircleOutlined } from "@ant-design/icons";
+import { Review } from "../../../functions/src/reviews/review"
 
 const Wrapper = styled.div`
     overflow-y:auto;
 `
-
-interface Review {
-    id?: string;
-    stars: number;
-    date_of_visit: number;
-    date_of_comment: number;
-    comment: string;
-    reply: string;
-}
-
 const ReviewReplier = ({ restaurantId }) => {
 
     const [pendingRepliesReviews, setPendingRepliesReviews] = useState<Review[]>()
@@ -47,10 +39,15 @@ const ReviewReplier = ({ restaurantId }) => {
                 onClick={() => getReviewsPendingReply(restaurantId)}
             >{!isLoading ? 'See reviews pending reply' : 'Loading'}</Button>
 
-            {pendingRepliesReviews?.length === 0 && <p>No pending replies</p>}
+            {pendingRepliesReviews?.length === 0 && <p><CheckCircleOutlined /> No pending replies</p>}
 
             {pendingRepliesReviews?.map((review) => (
-                <ReplyForm restaurantId={restaurantId} comment={review.comment} key={review.id} />
+                <ReplyForm
+                    onReplyAdded={(restaurantId) => getReviewsPendingReply(restaurantId)}
+                    restaurantId={restaurantId}
+                    comment={review.comment}
+                    reviewId={review.id}
+                    key={review.id} />
             ))}
         </Wrapper>)
 }

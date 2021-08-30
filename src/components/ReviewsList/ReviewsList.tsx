@@ -1,17 +1,8 @@
 import { useEffect, useState } from "react"
 import { fetchReviewsByRestaurantId } from "../../Api"
-import { Spin } from "antd";
+import { Spin, notification } from "antd";
 import ReviewCard from "../ReviewCard/ReviewCard"
-
-interface Review {
-    id?: string;
-    stars: number;
-    date_of_visit: number;
-    date_of_comment: number;
-    comment: string;
-    reply: string;
-}
-
+import { Review } from "../../../functions/src/reviews/review"
 
 const ReviewsList = ({ restaurant }) => {
 
@@ -25,7 +16,11 @@ const ReviewsList = ({ restaurant }) => {
                 const response = await fetchReviewsByRestaurantId(restaurant.id)
                 setReviews(response.reviews)
             } catch (err) {
-                console.log(err)
+                notification.error({
+                    message: 'Error',
+                    description:
+                        'There was an error trying to load the reviews. Please retry.'
+                });
             } finally {
                 setIsLoading(false)
             }
@@ -41,7 +36,7 @@ const ReviewsList = ({ restaurant }) => {
                 </div>}
 
             {!isLoading && <>
-                <h2>User's reviews</h2>
+                <h2>{reviews.length === 0 ? 'There are currently no reviews for this restaurant.' : 'Reviews from users'}</h2>
                 {(reviews || []).map((review) => (
                     <ReviewCard review={review} key={review.id} />
                 ))}

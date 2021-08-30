@@ -5,15 +5,15 @@ const RestaurantCard = ({ restaurant }) => {
 
     return (
         <Card style={{ marginBottom: '15px', }}
-            title={restaurant.name}
+            title={<h2 style={{ marginBottom: '0px', }}>{restaurant.name}</h2>}
         >
             <p><EnvironmentOutlined /> {restaurant.city}</p>
 
-            {restaurant.avg_rating === 0 ? <p><TrophyOutlined /> This restaurant is not rated yet</p> : <p><TrophyOutlined /> Current Rating: {restaurant.avg_rating.toFixed(1)}</p>}
+            {<p><TrophyOutlined /> {restaurant.avg_rating === 0 ? 'This restaurant is not rated yet' : `Current rating: ${restaurant.avg_rating.toFixed(1)}`} </p>}
 
             {restaurant.highest_rated_review &&
                 <div
-                    style={{ marginBottom: '10px', padding: '8px', backgroundColor: '#EDF7ED', color: '#1E4620' }}
+                    style={{ borderRadius: '4px', marginBottom: '10px', padding: '8px', backgroundColor: '#EDF7ED', color: '#1E4620' }}
                 >
                     <p>Highest review:</p>
                     <p><LikeOutlined /> {restaurant.highest_rated_review.comment}</p>
@@ -23,6 +23,7 @@ const RestaurantCard = ({ restaurant }) => {
             {restaurant.lowest_rated_review &&
                 <div
                     style={{
+                        borderRadius: '4px',
                         padding: '8px',
                         color: '#611A15',
                         backgroundColor: '#FDECEA'

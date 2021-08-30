@@ -27,7 +27,7 @@ const NavBar = () => {
                 marginBottom: '30px',
             }}
         >
-            <span>{`Welcome, ${currentUser?.displayName}`}</span>
+            <span style={{ fontSize: '18px' }}>{`Welcome, ${currentUser?.displayName}`}</span>
             <Button
                 type="primary"
                 danger

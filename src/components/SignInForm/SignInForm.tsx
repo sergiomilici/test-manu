@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { withRouter } from "react-router"
 import { useHistory } from 'react-router-dom'
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, notification } from 'antd';
 import { getTokenFromFirebase, signIn } from "../../Api";
 import { setToken } from "../Auth/Session";
 
@@ -11,15 +11,19 @@ const SignIn = () => {
   const history = useHistory()
 
   const handleSignIn = useCallback(
-    async ({email, password}) => {
+    async ({ email, password }) => {
       try {
         setIsLoading(true)
         await signIn(email, password)
         const sessionToken = await getTokenFromFirebase()
         setToken(sessionToken)
         history.push("/restaurants")
-      } catch (error) {
-        alert(error);
+      } catch (err) {
+        notification.error({
+          message: 'Error',
+          description:
+            err.message
+        });
       } finally {
         setIsLoading(false)
       }

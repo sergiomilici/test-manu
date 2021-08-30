@@ -86,11 +86,11 @@ export const fetchRestaurants = async () => {
   }
 
   const response = await fetch(`${API_URL}/restaurants`, reqOptions)
-
+  await validateResponse(response)
   return await response.json()
 }
 
-export const fetchRestaurantById = async (id) => {
+export const fetchRestaurantById = async (id: string) => {
   const bearerToken = await getAuthToken()
 
   const reqOptions = {
@@ -106,7 +106,7 @@ export const fetchRestaurantById = async (id) => {
   return await response.json()
 }
 
-export const fetchReviewsByRestaurantId = async (id) => {
+export const fetchReviewsByRestaurantId = async (id: string) => {
   const bearerToken = await getAuthToken()
 
   const reqOptions = {
@@ -167,7 +167,7 @@ export const postReview = async (id:string, stars: number,
     await fetch(`${API_URL}/reviews/${id}`, reqOptions)
 }
 
-export const fetchPendingReplyReview = async (restaurantId) => {
+export const fetchPendingReplyReview = async (restaurantId: string) => {
 
   const bearerToken = await getAuthToken()
   const reqOptions = {
@@ -180,4 +180,39 @@ export const fetchPendingReplyReview = async (restaurantId) => {
 
   const response = await fetch(`${API_URL}/reviews/${restaurantId}/pending`, reqOptions)
   return response.json()
+}
+
+export const postReplyToReview = async ( restaurantId: string, reviewId: string, comment: string) => {
+
+  const data = comment
+
+  const bearerToken = await getAuthToken()
+  const reqOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    method: 'PUT',
+    body:JSON.stringify(data)
+  }
+
+  await fetch(`${API_URL}/reviews/${restaurantId}/${reviewId}/reply`, reqOptions)
+}
+
+export const postRestaurant = async (name: string, city:string, country: string) => {
+
+  const data = {name, city, country}
+
+  const bearerToken = await getAuthToken()
+  const reqOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    method: 'POST',
+    body:JSON.stringify(data)
+  }
+  
+  await fetch(`${API_URL}/restaurants`, reqOptions)
+
 }
