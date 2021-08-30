@@ -3,6 +3,7 @@ import {
   createReview,
   getPendingReplyReviews,
   getReviews,
+  patchReview,
   removeReply,
   removeReview,
   replyToReview,
@@ -18,18 +19,24 @@ export function reviewsConfig(app: Application) {
     isAuthorized({hasRole: ["admin", "owner", "user"]}),
     createReview
   );
-  app.put(
+  app.patch(
     "/reviews/:restaurantId/:reviewId",
     isAuthenticated,
     isAuthorized({hasRole: ["admin", "owner"]}),
     updateReview
   );
-  // Add/Edit reply
+  // Add reply
   app.put(
     "/reviews/:restaurantId/:reviewId/reply",
     isAuthenticated,
     isAuthorized({hasRole: ["admin", "owner"]}),
     replyToReview
+  );
+  app.patch(
+    "/reviews/:restaurantId/:reviewId/reply",
+    isAuthenticated,
+    isAuthorized({hasRole: ["admin", "owner"]}),
+    patchReview
   );
   app.delete(
     "/reviews/:restaurantId/:reviewId",

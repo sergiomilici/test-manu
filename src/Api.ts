@@ -214,7 +214,7 @@ export const patchRestaurant = async (restaurant: Restaurant): Promise<void> => 
       'Content-Type': 'application/json',
       Authorization: `Bearer ${bearerToken}`,
     },
-    method: 'PUT',
+    method: 'PATCH',
     body: JSON.stringify(restaurant),
   }
   await fetch(`${API_URL}/restaurants/${restaurant.id}`, reqOptions)
@@ -227,7 +227,7 @@ export const patchReview = async (restaurantId: string, reviewId: string, commen
       'Content-Type': 'application/json',
       Authorization: `Bearer ${bearerToken}`,
     },
-    method: 'PUT',
+    method: 'PATCH',
     body: JSON.stringify({
       comment
     }),
@@ -243,7 +243,7 @@ export const patchReply = async (restaurantId: string, reviewId: string, comment
       'Content-Type': 'application/json',
       Authorization: `Bearer ${bearerToken}`,
     },
-    method: 'PUT',
+    method: 'PATCH',
     body: JSON.stringify({
       reply: comment
     }),

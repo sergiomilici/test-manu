@@ -33,13 +33,14 @@ export const addReplyToReview = async (
   restaurantId: string,
   reviewId: string,
   reply: string,
-  userId: string
+  userId: string,
+  isPatch = false
 ): Promise<void> => {
   const reviewRef = await getReviewRef(restaurantId, reviewId);
   const reviewDoc = await reviewRef.get();
   const review = reviewDoc.data() as Review;
 
-  if (review.reply) {
+  if (!isPatch && review.reply) {
     throw new Error(`Restaurant "${restaurantId}" with review "${reviewId}" already has a reply.`);
   }
 

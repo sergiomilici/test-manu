@@ -105,6 +105,26 @@ export const replyToReview = async (req: Request, res: Response): Promise<void> 
   }
 };
 
+export const patchReview = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {restaurantId, reviewId} = req.params;
+    const {uid} = res.locals;
+    const replyReviewPayload = req.body as ReplyReviewPayload;
+
+    const replyComment = replyReviewPayload?.reply || "";
+    if (replyComment.length === 0 || replyComment.length > MAX_COMMENT_LENGTH) {
+      throw new Error(`Invalid arguments: Reply comment must exists and not exceed ${MAX_COMMENT_LENGTH} chars`);
+    }
+
+    // Add the reply to the review
+    await addReplyToReview(restaurantId, reviewId, replyComment, uid, true);
+
+    res.send({ok: true});
+  } catch (err) {
+    handleError(res, err);
+  }
+};
+
 export const removeReview = async (req: Request, res: Response): Promise<void> => {
   try {
     const {restaurantId, reviewId} = req.params;

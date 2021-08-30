@@ -17,7 +17,7 @@ export function restaurantsConfig(app: Application) {
     createRestaurant
   );
 
-  app.put(
+  app.patch(
     "/restaurants/:restaurantId",
     isAuthenticated,
     isAuthorized({hasRole: ["admin"]}),
