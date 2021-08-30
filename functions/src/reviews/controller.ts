@@ -49,6 +49,7 @@ export const validateReviewPayload = (reviewPayload: CreateReviewPayload) => {
 export const createReview = async (req: Request, res: Response): Promise<void> => {
   try {
     const {restaurantId} = req.params;
+    const {uid} = res.locals;
     const reviewPayload = req.body as CreateReviewPayload;
     validateReviewPayload(reviewPayload);
 
@@ -69,6 +70,7 @@ export const createReview = async (req: Request, res: Response): Promise<void> =
         date_of_comment: getUnixTimestamp(),
         date_of_visit: reviewPayload.date_of_visit,
         reply: "",
+        comment_user_id: uid,
       });
 
     const review = (await reviewRef.get()).data() as Review;
