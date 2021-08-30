@@ -34,7 +34,7 @@ export function restaurantsConfig(app: Application) {
   app.get(
     "/restaurants/:restaurantId",
     isAuthenticated,
-    isAuthorized({hasRole: ["admin", "owner"]}),
+    isAuthorized({hasRole: ["admin", "owner", "user"]}),
     getRestaurantWithId
   );
 

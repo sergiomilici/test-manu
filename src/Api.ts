@@ -213,6 +213,19 @@ export const deleteRestaurant = async (restaurantId) => {
   await fetch(`${API_URL}/restaurants/${restaurantId}`, reqOptions)
 }
 
+export const getUser = async (userId: string) => {
+  const bearerToken = await getAuthToken()
+  const reqOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    method: 'GET',
+  }
+  const response = await fetch(`${API_URL}/users/${userId}`, reqOptions)
+  return response.json()
+}
+
 
 
 export const postRestaurant = async (name: string, city:string, country: string) => {
@@ -228,7 +241,7 @@ export const postRestaurant = async (name: string, city:string, country: string)
     method: 'POST',
     body:JSON.stringify(data)
   }
-  
+
   await fetch(`${API_URL}/restaurants`, reqOptions)
 
 }

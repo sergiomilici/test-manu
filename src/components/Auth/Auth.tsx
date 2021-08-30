@@ -2,6 +2,7 @@ import { createContext, useEffect, useRef, useState } from 'react'
 import fb from '../../firebaseConfig';
 import firebase from 'firebase';
 import { getToken } from './Session';
+import { getUser } from '../../Api';
 
 (window as any).fb = fb;
 
@@ -10,11 +11,17 @@ type ContextUser = firebase.User | null | undefined;
 interface IAuthContext {
   currentUser: ContextUser;
   validSession: boolean,
+  isAdmin: boolean;
+  isOwner: boolean;
+  isUser: boolean;
 }
 
 const defaultAuthContext = {
   currentUser: null,
   validSession: !!getToken(),
+  isAdmin: false,
+  isOwner: false,
+  isUser: true,
 } as const;
 
 export const AuthContext = createContext<IAuthContext>(defaultAuthContext);
@@ -33,12 +40,19 @@ export const AuthProvider = ({children}) => {
       return
     }
 
-    fbStateListener.current = fb.auth().onAuthStateChanged((user: firebase.User | null) => {
+    fbStateListener.current = fb.auth().onAuthStateChanged(async (user: firebase.User | null) => {
       if (user) {
+        const response = await getUser(user.uid)
+        console.log(user)
+        // @ts-ignore
+        const {role} = response.user;
         setCurrentAuthContext({
           ...currentAuthContext,
           currentUser: user,
           validSession: true,
+          isAdmin: role === 'admin',
+          isOwner: role === 'owner',
+          isUser: role === 'user',
         });
       } else {
         setCurrentAuthContext({...currentAuthContext, currentUser: user});
