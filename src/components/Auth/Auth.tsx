@@ -26,14 +26,14 @@ const defaultAuthContext = {
 
 export const AuthContext = createContext<IAuthContext>(defaultAuthContext);
 
-export const AuthProvider = ({children}) => {
+export const AuthProvider = ({ children }) => {
   const [currentAuthContext, setCurrentAuthContext] = useState<IAuthContext>(defaultAuthContext)
   const fbStateListener = useRef<firebase.Unsubscribe | null>(null)
 
   useEffect(() => {
     const sessionToken = getToken()
     if (sessionToken && !currentAuthContext.validSession) {
-      setCurrentAuthContext({...currentAuthContext, validSession: true});
+      setCurrentAuthContext({ ...currentAuthContext, validSession: true });
     }
 
     if (fbStateListener.current) {
@@ -43,9 +43,8 @@ export const AuthProvider = ({children}) => {
     fbStateListener.current = fb.auth().onAuthStateChanged(async (user: firebase.User | null) => {
       if (user) {
         const response = await getUser(user.uid)
-        console.log(user)
         // @ts-ignore
-        const {role} = response.user;
+        const { role } = response.user;
         setCurrentAuthContext({
           ...currentAuthContext,
           currentUser: user,
@@ -55,7 +54,7 @@ export const AuthProvider = ({children}) => {
           isUser: role === 'user',
         });
       } else {
-        setCurrentAuthContext({...currentAuthContext, currentUser: user});
+        setCurrentAuthContext({ ...currentAuthContext, currentUser: user });
       }
     });
   }, [fbStateListener, currentAuthContext])

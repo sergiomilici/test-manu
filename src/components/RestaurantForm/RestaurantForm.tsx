@@ -12,8 +12,8 @@ const RestaurantForm = ({ onRestaurantCreated }) => {
     const handleNewRestaurant = async (values) => {
         try {
             setIsLoading(true)
-            await postRestaurant(values.name, values.city, values.country)
-            onRestaurantCreated("ok")
+            const response = await postRestaurant(values.name, values.city, values.country)
+            onRestaurantCreated(response)
             notification.success({
                 message: 'Success',
                 description:

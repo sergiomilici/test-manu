@@ -25,6 +25,11 @@ const ReplyForm = ({ restaurantId, reviewId, comment, onReplyAdded }) => {
             await postReplyToReview(restaurantId, reviewId, values)
             onReplyAdded(restaurantId)
             form.resetFields();
+            notification.success({
+                message: 'Success',
+                description:
+                    'Your reply was successfuly sent.',
+            });
         } catch (err) {
             notification.error({
                 message: 'Error',
@@ -37,15 +42,15 @@ const ReplyForm = ({ restaurantId, reviewId, comment, onReplyAdded }) => {
     }
 
     return (
-        <div style={{ padding: '4px', marginBottom: '5px', borderRadius: '4px', border: '1px solid #eee', }}>
-            <Comment><span style={{ marginRight: '3px', textDecoration: 'underline', }}>Comment by user:</span>{comment}</Comment>
+        <div style={{ padding: '6px', marginBottom: '5px', borderRadius: '4px', border: '1px solid #eee', }}>
+            <Comment><span style={{ marginRight: '3px', fontWeight: 'bold', }}>Comment by user:</span>{comment}</Comment>
             <Button
-
                 onClick={() => setIsFormVisible(!isFormVisible)}>
                 {isFormVisible ? 'Hide form' : 'Reply'}
             </Button>
             {isFormVisible &&
                 <Form
+                    style={{ marginTop: '8px', }}
                     form={form}
                     onFinish={handleReplyToReview}
                 >

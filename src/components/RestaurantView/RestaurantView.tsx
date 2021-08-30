@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Spin } from "antd";
+import { Divider, Spin, Alert, Button } from "antd";
 import NavBar from "../NavBar/NavBar";
 import ReviewForm from "../ReviewForm/ReviewForm";
 import ReviewsList from "../ReviewsList/ReviewsList";
@@ -19,6 +19,7 @@ const RestaurantView = () => {
 
     const [restaurant, setRestaurant] = useState<undefined | Restaurant>()
     const [isLoading, setIsLoading] = useState(false)
+    const [hasErrors, setHasErrors] = useState(false)
 
     const restaurantId = useParams().id
 
@@ -29,13 +30,13 @@ const RestaurantView = () => {
                 const restaurant = await fetchRestaurantById(restaurantId)
                 setRestaurant(restaurant)
             } catch (err) {
-                console.log(err)
+                setHasErrors(true)
             } finally {
                 setIsLoading(false)
             }
         }
         getRestaurantById()
-    }, [restaurantId])
+    }, [restaurantId, hasErrors])
 
     if (!restaurant) {
         return null
@@ -45,11 +46,30 @@ const RestaurantView = () => {
         <>
             <NavBar />
             <Wrapper>
+                {hasErrors &&
+                    <Alert
+                        showIcon
+                        action={
+                            <Button
+                                type="primary"
+                                onClick={() => setHasErrors(false)}
+                            >Retry</Button>
+                        }
+                        type="error"
+                        message="There was an error while requesting the restaurant information. Please retry."
+                        style={{ marginBottom: '10px', }}
+                    >
+                    </Alert>}
+
                 {isLoading && <div style={{ marginBottom: '8px', textAlign: 'center', }}><Spin size="large" /></div>}
-                <RestaurantCard restaurant={restaurant} />
+
+                {restaurant && <RestaurantCard restaurant={restaurant} />}
+
                 <ReviewForm
                     restaurantId={restaurantId}
                     onReviewAdded={(restaurant) => { setRestaurant(restaurant) }} />
+
+                <Divider />
 
                 <ReviewsList restaurant={restaurant} />
             </Wrapper>

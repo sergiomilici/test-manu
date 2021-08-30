@@ -1,12 +1,10 @@
 import { Comment } from "antd"
-import { FormOutlined } from "@ant-design/icons";
+import { FormOutlined, StarOutlined, MessageOutlined } from "@ant-design/icons";
 import moment from "moment";
 import styled from 'styled-components';
 
 const OwnerReply = styled.div`
-text-decoration:underline; 
-margin-right:3px;
-display:inline;
+
 `
 
 const ReviewCard = ({ review }) => {
@@ -14,20 +12,24 @@ const ReviewCard = ({ review }) => {
         <Comment
             style={{ border: '1px solid #eee', marginBottom: '15px', padding: '10px', }}
             avatar={<FormOutlined />}
-            datetime={<span>Visited on: {moment.unix(review.date_of_visit).format("MM-DD-YYYY")}</span>
+            datetime={<span style={{ fontSize: '13px', }}>Visited on: {moment.unix(review.date_of_visit).format("MM-DD-YYYY")}</span>
             }
             content={
                 <>
-                    <i>User Rating: {review.stars}</i>
-                    <p>{review.comment}</p>
+                    <p>Username placeholder</p>
+                    <p style={{ marginBottom: '4px', }}>{review.stars} <StarOutlined /></p>
+                    <i style={{ fontSize: '17px', }} >{review.comment}</i>
                 </>
             }
         >
-            {review.reply && <div style={{
+            {review.reply && <OwnerReply style={{
                 backgroundColor: '#eee',
-                padding: '4px',
+                padding: '6px',
                 borderRadius: '4px',
-            }}><OwnerReply>Reply by owner:</OwnerReply>{review.reply}</div>}
+            }}>
+                <MessageOutlined />
+                <span style={{ marginLeft: '3px', fontWeight: 'bold', }}>
+                    Owner's reply: </span>{review.reply}</OwnerReply>}
         </Comment>
     )
 }

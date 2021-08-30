@@ -21,6 +21,11 @@ const ReviewForm = ({ restaurantId, onReviewAdded }) => {
             form.resetFields();
             const restaurant = await fetchRestaurantById(restaurantId)
             onReviewAdded(restaurant)
+            notification.success({
+                message: 'Success',
+                description:
+                    'You review was sent!',
+            });
         } catch (err) {
             notification.error({
                 message: 'Error',

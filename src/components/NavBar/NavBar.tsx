@@ -1,20 +1,28 @@
 import { useContext } from 'react'
 import { useHistory } from "react-router-dom";
 import fb from "../../firebaseConfig";
-import { Button } from 'antd';
+import { Menu, Dropdown, Button, Skeleton } from 'antd';
 import { AuthContext } from "../Auth/Auth";
-import { PoweroffOutlined } from "@ant-design/icons";
+import { PoweroffOutlined, DownOutlined, UserOutlined } from "@ant-design/icons";
 
 
 const NavBar = () => {
 
     const history = useHistory();
-    const logOut = () => {
+    const handleLogOut = () => {
         fb.auth().signOut();
         history.push('/signin')
     }
 
     const { currentUser } = useContext(AuthContext)
+
+    const menu = (
+        <Menu onClick={handleLogOut}>
+            <Menu.Item key="1" icon={<PoweroffOutlined />}>
+                Log out
+            </Menu.Item>
+        </Menu>
+    );
 
     return (
         <div
@@ -27,15 +35,16 @@ const NavBar = () => {
                 marginBottom: '30px',
             }}
         >
-            <span style={{ fontSize: '18px' }}>{`Welcome, ${currentUser?.displayName}`}</span>
-            <Button
-                type="primary"
-                danger
-                icon={<PoweroffOutlined />}
-                onClick={logOut}
-            >
-                Log Out
-            </Button>
+            {!currentUser && <Skeleton.Button style={{ width: '200px', }} active={true} size="default" shape="round" />}
+
+            {currentUser && <Dropdown overlay={menu}>
+                <Button style={{ display: 'flex', alignItems: 'center', fontSize: '19px', }}>
+                    <UserOutlined />
+                    {`Welcome, ${currentUser?.displayName}`}
+                    <DownOutlined />
+                </Button>
+            </Dropdown>}
+
         </div>
 
     )

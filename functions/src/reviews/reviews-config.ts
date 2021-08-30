@@ -15,7 +15,7 @@ export function reviewsConfig(app: Application) {
   app.post(
     "/reviews/:restaurantId",
     isAuthenticated,
-    isAuthorized({hasRole: ["admin", "owner"]}),
+    isAuthorized({hasRole: ["admin", "owner", "user"]}),
     createReview
   );
   app.put(
@@ -52,7 +52,7 @@ export function reviewsConfig(app: Application) {
   app.get(
     "/reviews/:restaurantId",
     isAuthenticated,
-    isAuthorized({hasRole: ["owner"]}),
+    isAuthorized({hasRole: ["admin","owner", "user"]}),
     getReviews
   );
 }

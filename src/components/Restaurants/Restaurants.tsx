@@ -1,14 +1,15 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useContext, useState, useEffect, useCallback, useMemo } from 'react'
 import { Link } from "react-router-dom";
 import { List, Spin, Select, Alert, Button, notification } from 'antd';
 import { fetchRestaurants } from '../../Api';
 import Title from 'antd/es/typography/Title';
-import { HomeOutlined, TrophyOutlined } from "@ant-design/icons";
+import { HomeOutlined, StarOutlined } from "@ant-design/icons";
 import NavBar from "../NavBar/NavBar";
 import { Restaurant } from '../../../functions/src/restaurants/restaurant';
 import styled from 'styled-components';
 import ReviewReplier from '../ReviewReplier/ReviewReplier';
 import RestaurantForm from '../RestaurantForm/RestaurantForm';
+import { AuthContext } from "../Auth/Auth";
 
 const { Option } = Select;
 
@@ -28,7 +29,9 @@ const Restaurants = () => {
 
   const [filterRating, setFilterRating] = useState<string>("-1")
 
-  const userRole = "owner"
+  const { isUser } = useContext(AuthContext)
+  const { isOwner } = useContext(AuthContext)
+  const { isAdmin } = useContext(AuthContext)
 
   useEffect(() => {
     const getRestaurants = async () => {
@@ -68,10 +71,23 @@ const Restaurants = () => {
   }, [])
 
 
-  //if OWNER can see RestaurantForm and own RestaurantsList
-  //if 0 restaurants && owner must see RestaurantForm
+  const textByRole = () => {
+    if (isOwner) {
+      return "Start by adding your first restaurant"
+    }
 
-  // const noRestaurantsMsg  = user? "There are no restaurants matching current filter" owner? Start by adding your first restaurant
+    if (isUser) {
+      return "There are no restaurants matching current filter"
+    }
+
+    if (isAdmin) {
+      return "There are no restaurants created"
+    }
+  }
+
+  const noRestaurantsMsg = textByRole()
+
+  //if user is regular and enters first time there wont be restaurants loaded, so the display message cant be "There are no restaurants matching current filter" 
 
   return (
     <>
@@ -97,7 +113,7 @@ const Restaurants = () => {
           >
           </Alert>}
 
-        {!isLoading && !hasErrors &&
+        {!isLoading && !hasErrors && isUser &&
           <Select
             defaultValue="-1"
             style={{ width: 200, display: 'block', marginBottom: '10px', }}
@@ -111,11 +127,12 @@ const Restaurants = () => {
             <Option value="5">5 Stars</Option>
           </Select>}
 
-        {!isLoading && !hasErrors && userRole === "owner" && <RestaurantForm onRestaurantCreated={(confirmation) => console.log(confirmation)} />}
+        {/* {get restaurant object not just restaurantId} */}
+        {!isLoading && !hasErrors && isOwner && <RestaurantForm onRestaurantCreated={(restaurantId) => console.log(restaurantId)} />}
 
         {!isLoading && !hasErrors && <List
           itemLayout="vertical"
-          locale={{ emptyText: "There are no restaurants matching current filter" }}
+          locale={{ emptyText: noRestaurantsMsg }}
           bordered
           dataSource={filteredRestaurants}
           renderItem={(restaurant: any) => (
@@ -125,7 +142,7 @@ const Restaurants = () => {
                   textAlign: 'left',
                 }}
                 key={restaurant.id}>
-                <HomeOutlined style={{ marginRight: '8px' }} />
+                <HomeOutlined style={{ marginRight: '5px' }} />
                 <Link
                   style={{
                     color: 'inherit',
@@ -137,10 +154,8 @@ const Restaurants = () => {
                 >
                   <h3 style={{ fontSize: '20px', display: 'inline', }}>{restaurant.name}</h3>
                 </Link>
-                <h4 style={{ display: 'block', margin: '0px', marginLeft: 'auto', }}>
-                  {restaurant.avg_rating === 0 ? <p><TrophyOutlined /> This restaurant is not rated yet</p> : <p><TrophyOutlined /> Current Rating: {restaurant.avg_rating.toFixed(1)}</p>}
-                </h4>
-                {userRole === "owner" && <ReviewReplier restaurantId={restaurant.id} />}
+                {<p style={{ marginTop: '15px', fontSize: '15px' }}><StarOutlined /> {restaurant.avg_rating === 0 ? 'This restaurant is not rated yet' : `Current rating: ${restaurant.avg_rating.toFixed(1)}`} </p>}
+                {isOwner && <ReviewReplier restaurantId={restaurant.id} />}
               </List.Item>
             </>
           )

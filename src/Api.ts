@@ -68,11 +68,9 @@ export const fetchUsers = async () => {
     method: 'GET',
   }
 
-
   const response = await fetch(`${API_URL}/users`, reqOptions)
-
+  await validateResponse(response)
   return await response.json()
-
 }
 
 export const fetchRestaurants = async () => {
@@ -103,7 +101,7 @@ export const fetchRestaurantById = async (id: string) => {
   }
 
   const response = await fetch(`${API_URL}/restaurants/${id}`, reqOptions)
-
+  await validateResponse(response)
   return await response.json()
 }
 
@@ -119,7 +117,7 @@ export const fetchReviewsByRestaurantId = async (id: string) => {
   }
 
   const response = await fetch(`${API_URL}/reviews/${id}`, reqOptions)
-
+  await validateResponse(response)
   return await response.json()
 }
 
@@ -163,7 +161,9 @@ export const postReview = async (id:string, stars: number,
       method: 'POST',
       body:JSON.stringify(data)
     }
-    await fetch(`${API_URL}/reviews/${id}`, reqOptions)
+    const response = await fetch(`${API_URL}/reviews/${id}`, reqOptions)
+    await validateResponse(response)
+    return response.json()
 }
 
 
@@ -242,7 +242,8 @@ export const postRestaurant = async (name: string, city:string, country: string)
     body:JSON.stringify(data)
   }
 
-  await fetch(`${API_URL}/restaurants`, reqOptions)
+  const response = await fetch(`${API_URL}/restaurants`, reqOptions)
+  return response.json()
 
 }
 

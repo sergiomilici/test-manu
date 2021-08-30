@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { fetchReviewsByRestaurantId } from "../../Api"
-import { Spin, notification } from "antd";
+import { Spin, Alert, Button } from "antd";
 import ReviewCard from "../ReviewCard/ReviewCard"
 import { Review } from "../../../functions/src/reviews/review"
 
@@ -8,6 +8,7 @@ const ReviewsList = ({ restaurant }) => {
 
     const [reviews, setReviews] = useState<Review[]>([])
     const [isLoading, setIsLoading] = useState(false)
+    const [hasErrors, setHasErrors] = useState(false)
 
     useEffect(() => {
         const getReviewsById = async () => {
@@ -16,17 +17,13 @@ const ReviewsList = ({ restaurant }) => {
                 const response = await fetchReviewsByRestaurantId(restaurant.id)
                 setReviews(response.reviews)
             } catch (err) {
-                notification.error({
-                    message: 'Error',
-                    description:
-                        'There was an error trying to load the reviews. Please retry.'
-                });
+                setHasErrors(true)
             } finally {
                 setIsLoading(false)
             }
         }
         getReviewsById()
-    }, [restaurant])
+    }, [restaurant, hasErrors])
 
     return (
         <>
@@ -34,6 +31,21 @@ const ReviewsList = ({ restaurant }) => {
                 <div style={{ textAlign: 'center', }}>
                     <Spin size="large" />
                 </div>}
+
+            {hasErrors &&
+                <Alert
+                    showIcon
+                    action={
+                        <Button
+                            type="primary"
+                            onClick={() => setHasErrors(false)}
+                        >Retry</Button>
+                    }
+                    type="error"
+                    message="There was an error while requesting reviews for this restaurant. Please retry."
+                    style={{ marginBottom: '10px', }}
+                >
+                </Alert>}
 
             {!isLoading && <>
                 <h2>{reviews.length === 0 ? 'There are currently no reviews for this restaurant.' : 'Reviews from users'}</h2>

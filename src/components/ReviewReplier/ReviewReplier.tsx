@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { fetchPendingReplyReview } from '../../Api';
-import { Button, notification } from 'antd';
+import { Alert, Button, notification } from 'antd';
 import ReplyForm from '../ReplyForm/ReplyForm';
 import styled from 'styled-components';
 import { CheckCircleOutlined } from "@ant-design/icons";
@@ -13,6 +13,7 @@ const ReviewReplier = ({ restaurantId }) => {
 
     const [pendingRepliesReviews, setPendingRepliesReviews] = useState<Review[]>()
     const [isLoading, setIsLoading] = useState(false)
+    const [hasErrors, setHasErrors] = useState(false)
 
     const getReviewsPendingReply = async (restaurantId) => {
         try {
@@ -38,6 +39,21 @@ const ReviewReplier = ({ restaurantId }) => {
                 disabled={isLoading}
                 onClick={() => getReviewsPendingReply(restaurantId)}
             >{!isLoading ? 'See reviews pending reply' : 'Loading'}</Button>
+
+            {hasErrors &&
+                <Alert
+                    showIcon
+                    action={
+                        <Button
+                            type="primary"
+                            onClick={() => setHasErrors(false)}
+                        >Retry</Button>
+                    }
+                    type="error"
+                    message="There was an error while requesting the reviews pending reply. Please retry."
+                    style={{ marginBottom: '10px', }}
+                >
+                </Alert>}
 
             {pendingRepliesReviews?.length === 0 && <p><CheckCircleOutlined /> No pending replies</p>}
 
