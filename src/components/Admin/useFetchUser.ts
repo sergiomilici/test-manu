@@ -6,6 +6,9 @@ import { useFetchData } from './useFetchData';
 
 export function useFetchUser<T extends User>(userId: string): IFetchModel<T> {
   const loadUser = useCallback(async () => {
+    if (!userId) {
+      return [];
+    }
     const response = await getUser(userId);
     return [response.user];
   }, [userId]);

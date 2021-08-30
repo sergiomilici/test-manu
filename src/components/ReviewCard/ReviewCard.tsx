@@ -2,12 +2,15 @@ import { Comment, Rate } from "antd"
 import { FormOutlined, MessageOutlined } from "@ant-design/icons";
 import moment from "moment";
 import styled from 'styled-components';
+import { useFetchUser } from '../Admin/useFetchUser';
 
 const OwnerReply = styled.div`
 
 `
 
 const ReviewCard = ({ review }) => {
+    const {isLoading:isLoadingUser, data}=useFetchUser(review.comment_user_id);
+    const user = data[0]
     return (
         <Comment
             style={{ border: '1px solid #eee', marginBottom: '15px', padding: '10px', }}
@@ -16,7 +19,7 @@ const ReviewCard = ({ review }) => {
             }
             content={
                 <>
-                    <p>Username placeholder</p>
+                {isLoadingUser ? 'Loading...': <p>{user?.displayName || 'User'}</p>}
                     <p style={{ marginBottom: '4px', }}><Rate value={review.stars} disabled={true} style={{fontSize:'12px'}}/></p>
                     <i style={{ fontSize: '17px', }} >{review.comment}</i>
                 </>
