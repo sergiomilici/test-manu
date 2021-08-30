@@ -18,10 +18,6 @@ const Wrapper = styled.div`
   text-align: center;
 `
 
-// New Owner
-// newowner@gmail.com
-// owner-password
-
 const Restaurants = () => {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -71,24 +67,6 @@ const Restaurants = () => {
   }, [])
 
 
-  const textByRole = () => {
-    if (isOwner) {
-      return "Start by adding your first restaurant"
-    }
-
-    if (isUser) {
-      return "There are no restaurants matching current filter"
-    }
-
-    if (isAdmin) {
-      return "There are no restaurants created"
-    }
-  }
-
-  const noRestaurantsMsg = textByRole()
-
-  //if user is regular and enters first time there wont be restaurants loaded, so the display message cant be "There are no restaurants matching current filter" 
-
   return (
     <>
       <NavBar />
@@ -127,12 +105,11 @@ const Restaurants = () => {
             <Option value="5">5 Stars</Option>
           </Select>}
 
-        {/* {get restaurant object not just restaurantId} */}
-        {!isLoading && !hasErrors && isOwner && <RestaurantForm onRestaurantCreated={(restaurantId) => console.log(restaurantId)} />}
+        {!isLoading && !hasErrors && isOwner && <RestaurantForm onRestaurantCreated={(restaurant) => setRestaurants([...restaurants, restaurant])} />}
 
         {!isLoading && !hasErrors && <List
           itemLayout="vertical"
-          locale={{ emptyText: noRestaurantsMsg }}
+          locale={{ emptyText: "There are no restaurants." }}
           bordered
           dataSource={filteredRestaurants}
           renderItem={(restaurant: any) => (

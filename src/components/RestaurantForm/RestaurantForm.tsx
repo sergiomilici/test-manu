@@ -13,7 +13,7 @@ const RestaurantForm = ({ onRestaurantCreated }) => {
         try {
             setIsLoading(true)
             const response = await postRestaurant(values.name, values.city, values.country)
-            onRestaurantCreated(response)
+            onRestaurantCreated(response.restaurant)
             notification.success({
                 message: 'Success',
                 description:

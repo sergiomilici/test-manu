@@ -55,7 +55,7 @@ const ReviewReplier = ({ restaurantId }) => {
                 >
                 </Alert>}
 
-            {pendingRepliesReviews?.length === 0 && <p><CheckCircleOutlined /> No pending replies</p>}
+            {pendingRepliesReviews?.length === 0 && <p style={{ marginTop: '8px', fontSize: '16px', color: 'green', }}><CheckCircleOutlined /> No pending replies</p>}
 
             {pendingRepliesReviews?.map((review) => (
                 <ReplyForm
