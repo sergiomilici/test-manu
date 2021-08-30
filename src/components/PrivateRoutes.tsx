@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import { AuthProvider } from './Auth/Auth';
 import Restaurants from './Restaurants/Restaurants';
 import RestaurantView from './RestaurantView/RestaurantView';
@@ -16,7 +16,7 @@ export const PrivateRoutes = () => {
     <AuthProvider>
       <Route exact path="/restaurants" component={Restaurants} />
       <Route exact path="/restaurant/:id" component={RestaurantView} />
-      <Route exact path="/admin" component={Admin} />
+      {isAdmin ? <Route exact path="/admin" component={Admin} /> : <Redirect to="/restaurants" />}
       <Route exact path="/" component={Restaurants} />
     </AuthProvider>
   )
