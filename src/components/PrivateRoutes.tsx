@@ -16,7 +16,7 @@ export const PrivateRoutes = () => {
     <AuthProvider>
       <Route exact path="/restaurants" component={Restaurants} />
       <Route exact path="/restaurant/:id" component={RestaurantView} />
-      {isAdmin ? <Route exact path="/admin" component={Admin} /> : <Redirect to="/restaurants" />}
+      {isAdmin && <Route exact path="/admin" component={Admin} />}
       <Route exact path="/" component={Restaurants} />
     </AuthProvider>
   )

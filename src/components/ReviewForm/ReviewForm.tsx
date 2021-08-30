@@ -72,6 +72,7 @@ const ReviewForm = ({ restaurantId, onReviewAdded }) => {
                         placeholder="Select date"
                         format={"MM-DD-YYYY"}
                         onChange={(date) => setDateOfVisit(date)}
+                        disabledDate={d => !d || d.isAfter(moment())}
                     />
                 </Form.Item>
                 <Form.Item
