@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect, useCallback, useMemo } from 'react'
 import { Link } from "react-router-dom";
-import { List, Spin, Select, Alert, Button, notification } from 'antd';
+import { List, Spin, Select, Skeleton, Alert, Button, notification } from 'antd';
 import { fetchRestaurants } from '../../Api';
 import Title from 'antd/es/typography/Title';
 import { HomeOutlined, StarOutlined } from "@ant-design/icons";
@@ -25,9 +25,7 @@ const Restaurants = () => {
 
   const [filterRating, setFilterRating] = useState<string>("-1")
 
-  const { isUser } = useContext(AuthContext)
-  const { isOwner } = useContext(AuthContext)
-  const { isAdmin } = useContext(AuthContext)
+  const { isUser, isOwner, isAdmin } = useContext(AuthContext)
 
   useEffect(() => {
     const getRestaurants = async () => {
@@ -91,7 +89,7 @@ const Restaurants = () => {
           >
           </Alert>}
 
-        {!isLoading && !hasErrors && isUser &&
+        {!hasErrors && isUser && restaurants.length > 0 &&
           <Select
             defaultValue="-1"
             style={{ width: 200, display: 'block', marginBottom: '10px', }}
