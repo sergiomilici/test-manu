@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import fb from "../../firebaseConfig";
 import { Menu, Dropdown, Button, Skeleton } from 'antd';
 import { AuthContext } from "../Auth/Auth";
+import { setToken } from '../Auth/Session';
 import { PoweroffOutlined, DownOutlined, UserOutlined } from "@ant-design/icons";
 
 
@@ -11,6 +12,7 @@ const NavBar = () => {
     const history = useHistory();
     const handleLogOut = () => {
         fb.auth().signOut();
+        setToken("")
         history.push('/signin')
     }
 

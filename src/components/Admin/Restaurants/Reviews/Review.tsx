@@ -44,11 +44,11 @@ export const Divider = styled.div`
   background-color: rgb(11, 12, 14);
 `
 
-export const ReviewComment = ({review, restaurantId}: ReviewProps) => {
+export const ReviewComment = ({ review, restaurantId }: ReviewProps) => {
   const {
     isLoading: isLoadingUser,
     data
-  } = useFetchUser<User>(review.uid || 'Vk2Eq6mm8pfPOJQAaq4v6EMXy2V2')
+  } = useFetchUser<User>(review.comment_user_id)
   const user = data[0];
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const [reviewComment, setReviewComment] = useState<string>(review.comment)
@@ -74,7 +74,7 @@ export const ReviewComment = ({review, restaurantId}: ReviewProps) => {
               <Divider />
               {formatDate(review.date_of_comment)}</span>
             <Divider />
-            <Rate value={review.stars} disabled={true} style={{fontSize: '10px'}} />
+            <Rate value={review.stars} disabled={true} style={{ fontSize: '10px' }} />
             <Divider />
             <Actions
               deleteType="review"
