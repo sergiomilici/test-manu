@@ -4,7 +4,7 @@ import fb from "../../firebaseConfig";
 import { Menu, Dropdown, Button, Skeleton } from 'antd';
 import { AuthContext } from "../Auth/Auth";
 import { setToken } from '../Auth/Session';
-import { PoweroffOutlined, DownOutlined, UserOutlined } from "@ant-design/icons";
+import { PoweroffOutlined, DownOutlined, UserOutlined, ControlOutlined } from "@ant-design/icons";
 
 
 const NavBar = () => {
@@ -16,13 +16,22 @@ const NavBar = () => {
         history.push('/signin')
     }
 
-    const { currentUser } = useContext(AuthContext)
+    const handleAdminRedirect = () => {
+        history.push('/admin')
+    }
+
+    const { isAdmin, currentUser } = useContext(AuthContext)
 
     const menu = (
-        <Menu onClick={handleLogOut}>
-            <Menu.Item key="1" icon={<PoweroffOutlined />}>
+        <Menu>
+            <Menu.Item onClick={handleLogOut} key="1" icon={<PoweroffOutlined />}>
                 Log out
             </Menu.Item>
+            {isAdmin &&
+                <Menu.Item onClick={handleAdminRedirect} key="2" icon={<ControlOutlined />}>
+                    Admin dashboard
+                </Menu.Item>
+            }
         </Menu>
     );
 
