@@ -1,7 +1,8 @@
-import { Modal, Spin } from 'antd';
+import { Modal } from 'antd';
 import { useReviews } from './useReviews';
 import { Review } from '../../../../../functions/src/reviews/review';
 import { ReviewComment } from './Review';
+import { Loader } from '../../../Loader';
 
 interface EditReviewsModalProps {
   isModalOpen: boolean;
@@ -18,7 +19,7 @@ export const EditReviewsModal = ({isModalOpen, onClose, restaurantId}: EditRevie
            onCancel={onClose}
            footer={null}
     >
-      {isLoading && <Spin style={{width: '100%'}} />}
+      {isLoading && <Loader />}
       {!isLoading && (
         reviews.map(review => (
           <ReviewComment

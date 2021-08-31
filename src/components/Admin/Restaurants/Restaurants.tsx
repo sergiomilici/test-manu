@@ -1,12 +1,13 @@
 import { useLoadRestaurants } from './useLoadRestaurants';
 import { Restaurant } from '../../../../functions/src/restaurants/restaurant';
 
-import { Input, notification, Spin } from 'antd';
+import { Input, notification } from 'antd';
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { matchString } from '../../../utils/RegExpUtils';
 import { RestaurantsTable } from './RestaurantsTable';
 import { UpdateRestaurantModal } from './UpdateRestaurantModal';
 import { EditReviewsModal } from './Reviews/EditReviewsModal';
+import { Loader } from '../../Loader';
 
 export const Restaurants = () => {
   const [filterRestaurantText, setFilterRestaurantText] = useState<string>('');
@@ -36,7 +37,7 @@ export const Restaurants = () => {
 
   return (
     <>
-      {isLoading && (<Spin />)}
+      {isLoading && (<Loader />)}
       {!isLoading && (
         <>
           <Input placeholder="Filter restaurants"

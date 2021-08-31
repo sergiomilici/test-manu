@@ -1,28 +1,33 @@
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
+import { Redirect, useHistory } from 'react-router-dom'
 import { withRouter } from "react-router"
-import { useHistory } from 'react-router-dom'
 import { Button, Form, Input, notification } from 'antd';
 import { getTokenFromFirebase, signIn } from "../../Api";
 import { setToken } from "../Auth/Session";
+import { AuthContext } from '../Auth/Auth';
 
 const SignIn = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const {currentUser} = useContext(AuthContext)
 
   const history = useHistory()
 
   const handleSignIn = useCallback(
-    async ({ email, password }) => {
+    async ({email, password}) => {
       try {
         setIsLoading(true)
         await signIn(email, password)
         const sessionToken = await getTokenFromFirebase()
+        if (!sessionToken) {
+          debugger;
+        }
         setToken(sessionToken)
         history.push("/restaurants")
       } catch (err) {
         notification.error({
           message: 'Error',
           description:
-            err.message
+          err.message
         });
       } finally {
         setIsLoading(false)
@@ -35,6 +40,9 @@ const SignIn = () => {
     console.log("Failed:", errorInfo);
   };
 
+  if (currentUser) {
+    return <Redirect to="/restaurants" />
+  }
 
   return (
     <div>

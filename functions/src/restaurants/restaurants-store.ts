@@ -14,7 +14,11 @@ export const getRestaurantRef = (restaurantId: string): DocumentReference<Docume
 };
 
 export const getRestaurantDoc = async (restaurantId: string) => {
-  return getRestaurantRef(restaurantId).get();
+  const restaurantDoc = await getRestaurantRef(restaurantId).get();
+  if (!restaurantDoc.exists) {
+    throw new Error(`Restaurant "${restaurantId}" does not exist`);
+  }
+  return restaurantDoc;
 };
 
 export const createRestaurantDoc = async (
@@ -34,7 +38,7 @@ export const updateRestaurantData = async (
   restaurantPayload: CreateRestaurantPayload
 ): Promise<FirebaseFirestore.WriteResult> => {
   const db = getFirestoreDB();
-  return db.collection(Collections.Restaurants).doc(restaurantId).set(restaurantPayload, { merge: true });
+  return db.collection(Collections.Restaurants).doc(restaurantId).set(restaurantPayload, {merge: true});
 };
 
 export const updateRestaurantRating = async (restaurantId: string, rate: number) => {
@@ -46,7 +50,7 @@ export const updateRestaurantRating = async (restaurantId: string, rate: number)
   if (restaurant.avg_rating !== 0) {
     updatedAvgRating = parseFloat(((restaurant.avg_rating + rate) / 2).toFixed(2));
   }
-  await restaurantRef.update({ avg_rating: updatedAvgRating });
+  await restaurantRef.update({avg_rating: updatedAvgRating});
 };
 
 export const updateRatedReviews = async (restaurantId: string, reviewId: string, review: Review): Promise<void> => {
@@ -64,13 +68,13 @@ export const updateRatedReviews = async (restaurantId: string, reviewId: string,
     review.stars >= restaurant.highest_rated_review.stars ||
     isHighestRatedReview
   ) {
-    await restaurantRef.update({ highest_rated_review: reviewData });
+    await restaurantRef.update({highest_rated_review: reviewData});
   } else if (
     !restaurant.lowest_rated_review ||
     review.stars <= restaurant.lowest_rated_review.stars ||
     isLowestRatedReview
   ) {
-    await restaurantRef.update({ lowest_rated_review: reviewData });
+    await restaurantRef.update({lowest_rated_review: reviewData});
   }
 };
 

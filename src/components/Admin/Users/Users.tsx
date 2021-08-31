@@ -1,10 +1,11 @@
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
-import { Input, Spin } from 'antd';
+import { Input } from 'antd';
 import { fetchUsers } from '../../../Api';
 import { User } from './User';
 import { UsersTable } from './UsersTable';
 import { matchString } from '../../../utils/RegExpUtils';
 import { SetUserModal } from './SetUser/SetUserModal';
+import { Loader } from '../../Loader';
 
 export const Users = () => {
   const [filterUsersText, setFilterUsersText] = useState<string>('');
@@ -78,7 +79,7 @@ export const Users = () => {
         />
         }
       </>}
-      {loadingUsers && <Spin />}
+      {loadingUsers && <Loader />}
     </>
   )
 }

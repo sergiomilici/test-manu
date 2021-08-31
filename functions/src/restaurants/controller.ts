@@ -33,7 +33,7 @@ export const createRestaurant = async (req: Request, res: Response): Promise<voi
     const {uid} = res.locals;
     const restaurantRef = await createRestaurantDoc(createRestaurantPayload, uid);
     console.log("Restaurant created with ID: ", restaurantRef.id);
-    const restaurantDoc = await restaurantRef.get()
+    const restaurantDoc = await restaurantRef.get();
     res.send({ restaurant: {...restaurantDoc.data(), id: restaurantRef.id} });
   } catch (err) {
     handleError(res, err);

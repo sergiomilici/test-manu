@@ -104,8 +104,8 @@ export const fetchRestaurantById = async (id) => {
   }
 
   const response = await fetch(`${API_URL}/restaurants/${id}`, reqOptions)
-
-  return await response.json()
+  await validateResponse(response);
+  return await response.json();
 }
 
 export const fetchReviewsByRestaurantId = async (id) => {
@@ -296,7 +296,7 @@ export const deleteReply = async (restaurantId, reviewId: string) => {
   await fetch(`${API_URL}/reviews/${restaurantId}/${reviewId}/reply`, reqOptions)
 }
 
-export const postReplyToReview = async ( restaurantId: string, reviewId: string, comment: string) => {
+export const postReplyToReview = async (restaurantId: string, reviewId: string, comment: string) => {
   const data = comment
   const bearerToken = await getAuthToken()
   const reqOptions = {
@@ -305,13 +305,13 @@ export const postReplyToReview = async ( restaurantId: string, reviewId: string,
       Authorization: `Bearer ${bearerToken}`,
     },
     method: 'PUT',
-    body:JSON.stringify(data)
+    body: JSON.stringify(data)
   }
 
   await fetch(`${API_URL}/reviews/${restaurantId}/${reviewId}/reply`, reqOptions)
 }
 
-export const postRestaurant = async (name: string, city:string, country: string) => {
+export const postRestaurant = async (name: string, city: string, country: string) => {
   const data = {name, city, country}
 
   const bearerToken = await getAuthToken()
@@ -321,7 +321,7 @@ export const postRestaurant = async (name: string, city:string, country: string)
       Authorization: `Bearer ${bearerToken}`,
     },
     method: 'POST',
-    body:JSON.stringify(data)
+    body: JSON.stringify(data)
   }
 
   const response = await fetch(`${API_URL}/restaurants`, reqOptions)
